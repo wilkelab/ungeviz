@@ -1,0 +1,25 @@
+Package: ungeviz
+Type: Package
+Title: Tools for visualizing uncertainty with ggplot2
+Version: 0.1.0
+Authors@R: c( 
+    person("Claus O.", "Wilke", , "wilke@austin.utexas.edu", c("cre", "aut")))
+Description: This package provides add-on functionality for ggplot2 to make
+    it easier to visualize uncertainty (which is called Ungewissheit in German).
+URL: https://github.com/clauswilke/ungeviz
+Depends:
+    R (>=3.1)
+Imports:
+    ggplot2
+License: GPL-2 | file LICENSE
+LazyData: true
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat,
+    vdiffr
+VignetteBuilder: knitr
+Collate:
+    'ungeviz.R'
+RoxygenNote: 6.0.1.9000
+Roxygen: list(markdown = TRUE)
