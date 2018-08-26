@@ -8,7 +8,7 @@ Description: This package provides add-on functionality for ggplot2 to make
     it easier to visualize uncertainty (which is called Ungewissheit in German).
 URL: https://github.com/clauswilke/ungeviz
 Depends:
-    R (>=3.1)
+    R (>= 3.1.0)
 Imports:
     ggplot2
 License: GPL-2 | file LICENSE
@@ -20,6 +20,7 @@ Suggests:
     vdiffr
 VignetteBuilder: knitr
 Collate:
+    'stat-conf-strip.R'
     'ungeviz.R'
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)

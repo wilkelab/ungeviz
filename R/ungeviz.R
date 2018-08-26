@@ -2,4 +2,6 @@
 #'
 #' @name ungeviz
 #' @docType package
+#' @import ggplot2
+#' @import rlang
 NULL
