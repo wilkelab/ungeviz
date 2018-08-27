@@ -20,7 +20,9 @@ Suggests:
     vdiffr
 VignetteBuilder: knitr
 Collate:
+    'geom-errorpoint.R'
     'stat-conf-strip.R'
+    'stat-summary-boot.R'
     'ungeviz.R'
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)

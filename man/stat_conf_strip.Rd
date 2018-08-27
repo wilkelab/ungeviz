@@ -23,8 +23,9 @@ covered by the confidence strip. If not supplied, is taken from the x scale.}
 The following aesthetics are understood by this stat (required aesthetics
 are in bold):
 \itemize{
-\item x
-\item y
+\item \strong{\code{estimate}}: The estimate whose uncertainty is to be displayed
+\item \strong{\code{moe}}: Margin of error
+\item \code{confidence}: Confidence level of the moe, defaults to 0.68 (one standard deviation)
 }
 }
 \keyword{datasets}

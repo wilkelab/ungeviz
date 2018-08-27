@@ -6,6 +6,9 @@
 Tools for visualizing uncertainty with ggplot2, written by Claus O.
 Wilke
 
+The name comes from the German word “Ungewissheit” which means
+uncertainty.
+
 ## Installation
 
 ``` r
