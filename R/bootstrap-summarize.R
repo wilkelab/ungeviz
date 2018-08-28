@@ -3,7 +3,9 @@
 #' Perform bootstrapped actions on data frames (tibbles) respecting any
 #' grouping that has been set up. The function `bootstrap_summarize()` is
 #' a drop-in replacement for `[dplyr::summarize()]` and the function
-#' `bootstrap_do()` is a drop-in replacement for `[dplyr::do()]`.
+#' `bootstrap_do()` is a drop-in replacement for `[dplyr::do()]`. The
+#' function `bootstrap()` simply generates bootstrapped data sets and
+#' returns them in a combined table.
 #'
 #' @param .data Data frame on which to operate.
 #' @param ndraws Number of independent bootstrap draws to perform.
@@ -47,3 +49,22 @@ bootstrap_do <- function(.data, ndraws, ..., .draw_key = ".draw") {
     .draw_df = map_dfr(1:ndraws, function(i) resample_do(., args, i))
   ) %>% unnest()
 }
+
+#' @rdname bootstrap_summarize
+#' @export
+bootstrap <- function(.data, ndraws, .draw_key = ".draw") {
+  bootstrap_do(
+    .data,
+    ndraws = ndraws,
+    out = {.},
+    .draw_key = .draw_key
+  ) %>%
+    select(out, !!.draw_key) %>%
+    unnest() %>%
+    group_by(!!as.symbol(.draw_key))
+}
+
+
+
+
+

@@ -4,6 +4,7 @@
 \alias{bootstrap_summarize}
 \alias{bootstrap_summarise}
 \alias{bootstrap_do}
+\alias{bootstrap}
 \title{Bootstrapped actions on data frames}
 \usage{
 bootstrap_summarize(.data, ndraws, ..., .draw_key = ".draw")
@@ -11,6 +12,8 @@ bootstrap_summarize(.data, ndraws, ..., .draw_key = ".draw")
 bootstrap_summarise(.data, ndraws, ..., .draw_key = ".draw")
 
 bootstrap_do(.data, ndraws, ..., .draw_key = ".draw")
+
+bootstrap(.data, ndraws, .draw_key = ".draw")
 }
 \arguments{
 \item{.data}{Data frame on which to operate.}
@@ -26,5 +29,7 @@ running from 1 to \code{ndraws} indicating the bootstrap replicate.}
 Perform bootstrapped actions on data frames (tibbles) respecting any
 grouping that has been set up. The function \code{bootstrap_summarize()} is
 a drop-in replacement for \code{[dplyr::summarize()]} and the function
-\code{bootstrap_do()} is a drop-in replacement for \code{[dplyr::do()]}.
+\code{bootstrap_do()} is a drop-in replacement for \code{[dplyr::do()]}. The
+function \code{bootstrap()} simply generates bootstrapped data sets and
+returns them in a combined table.
 }

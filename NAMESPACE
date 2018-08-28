@@ -2,6 +2,7 @@
 
 export(StatConfStrip)
 export(StatSummaryBoot)
+export(bootstrap)
 export(bootstrap_do)
 export(bootstrap_summarise)
 export(bootstrap_summarize)
