@@ -43,6 +43,23 @@ diamonds %>% group_by(cut, color, clarity) %>%
   transition_states(.draw, 1, 1)
 ```
 
+```{r mtcars-smooth-anim}
+mtcars %>% bootstrap(20) %>%
+  ggplot(aes(mpg, hp)) + 
+    geom_smooth(
+      data = mtcars,
+      method = "gam", formula = y ~ s(x, k = 3),
+      color = NA
+    ) + 
+    geom_point(data = mtcars) +
+    geom_smooth(
+      method = "gam",
+      formula = y ~ s(x, k = 3),
+      se = FALSE
+    ) + 
+    transition_states(.draw, 1, 1)
+```
+
 ```{r bluejays-lm-anim}
 library(broom)
 

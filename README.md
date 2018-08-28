@@ -41,7 +41,31 @@ diamonds %>% group_by(cut, color, clarity) %>%
 ![](man/figures/README-diamonds-mean-anim-1.gif)<!-- -->
 
 ``` r
+mtcars %>% bootstrap(20) %>%
+  ggplot(aes(mpg, hp)) + 
+    geom_smooth(
+      data = mtcars,
+      method = "gam", formula = y ~ s(x, k = 3),
+      color = NA
+    ) + 
+    geom_point(data = mtcars) +
+    geom_smooth(
+      method = "gam",
+      formula = y ~ s(x, k = 3),
+      se = FALSE
+    ) + 
+    transition_states(.draw, 1, 1)
+```
+
+![](man/figures/README-mtcars-smooth-anim-1.gif)<!-- -->
+
+``` r
 library(broom)
+#> 
+#> Attaching package: 'broom'
+#> The following object is masked from 'package:ungeviz':
+#> 
+#>     bootstrap
 
 data(BlueJays, package = "Stat2Data")
 
