@@ -20,6 +20,7 @@ Suggests:
     vdiffr
 VignetteBuilder: knitr
 Collate:
+    'bootstrap-summarize.R'
     'geom-errorpoint.R'
     'stat-conf-strip.R'
     'stat-summary-boot.R'

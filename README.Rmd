@@ -24,12 +24,11 @@ The name comes from the German word "Ungewissheit" which means uncertainty.
 devtools::install_github("clauswilke/ungeviz")
 ```
 
-## Examples
+## Visualizing uncertainty from fitted models
 
 ```{r}
+library(tidyverse)
 library(broom)
-library(dplyr)
-library(ggplot2)
 library(ungeviz)
 
 df_model <- lm(mpg ~ disp + hp + qsec, data = mtcars) %>%
@@ -42,4 +41,37 @@ ggplot(df_model, aes(estimate = estimate, moe = std.error, y = term)) +
   geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), height = 0.5) +
   scale_alpha_identity() +
   xlim(-2, 1)
+```
+
+
+
+## Bootstrapping
+
+
+The functions `bootstrap_summarize()` and `bootstrap_do()` are drop-in equivalents for dplyr's `summarize()` and `do()` but perform the respective action multiple times on bootstrapped data. This is convenient to generate hypothetical outcomes plots.
+
+```{r}
+library(gganimate)
+diamonds %>% group_by(cut, color, clarity) %>%
+  bootstrap_summarize(20, mean_price = mean(price)) %>%
+  ggplot(aes(color, mean_price, color = clarity)) +
+  geom_point() + facet_wrap(~cut) +
+  transition_states(.draw, 1, 1)
+```
+
+```{r}
+data(BlueJays, package = "Stat2Data")
+
+BlueJays %>% group_by(KnownSex) %>%
+  bootstrap_do(20,
+    tidy(lm(BillWidth ~ BillDepth, data = .))
+  ) %>%
+  select(KnownSex, .draw, term, estimate) %>%
+  spread(term, estimate) %>%
+  ggplot(aes(BillDepth, BillWidth)) +
+    geom_point(data = BlueJays, color = "#0072B2") +
+    geom_smooth(data = BlueJays, method = "lm", color = NA) +
+    geom_abline(aes(slope = BillDepth, intercept = `(Intercept)`)) +
+    facet_wrap(~KnownSex, scales = "free_x") +
+    transition_states(.draw, 1, 1)
 ```
