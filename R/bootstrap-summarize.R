@@ -19,7 +19,7 @@ bootstrap_summarize <- function(.data, ndraws, ..., .draw_key = ".draw") {
   resample_sum <- function(.data, argquos, i) {
     n <- nrow(.data)
     ids <- sample(n, n, replace = TRUE)
-    summarize(.data[ids, , drop = FALSE], !!!argquos, !!.draw_key := i)
+    summarize(.data[ids, , drop = FALSE], !!.draw_key := i, !!!argquos)
   }
 
   do(
@@ -41,7 +41,7 @@ bootstrap_do <- function(.data, ndraws, ..., .draw_key = ".draw") {
     n <- nrow(.data)
     ids <- sample(n, n, replace = TRUE)
     out <- do(.data[ids, , drop = FALSE], !!!argquos)
-    cbind(out, tibble(!!.draw_key := rep(i, nrow(out))))
+    cbind(tibble(!!.draw_key := rep(i, nrow(out))), out)
   }
 
   do(
