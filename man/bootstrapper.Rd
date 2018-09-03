@@ -4,7 +4,8 @@
 \alias{bootstrapper}
 \title{Create a bootstrapper function useful for repeated reproducible bootstrapping}
 \usage{
-bootstrapper(ndraws, ..., .seed = NULL, .draw_key = ".draw")
+bootstrapper(ndraws, ..., .seed = NULL, .draw_key = ".draw",
+  .row_key = ".row")
 }
 \arguments{
 \item{ndraws}{Number of independent bootstrap draws to perform.}
@@ -15,7 +16,18 @@ bootstrapper(ndraws, ..., .seed = NULL, .draw_key = ".draw")
 
 \item{.draw_key}{Name of the column that will hold an integer
 running from 1 to \code{ndraws} indicating the bootstrap replicate.}
+
+\item{.row_key}{Name of the column that will hold an integer
+counting rows in the final bootstrapped dataset. Useful for
+animations with gganimate.}
 }
 \description{
 Create a bootstrapper function useful for repeated reproducible bootstrapping
+}
+\examples{
+library(ggplot2)
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+  geom_point() +
+  geom_smooth(data = bootstrapper(5, Species), aes(group = .draw), se = FALSE) +
+  facet_wrap(~Species)
 }

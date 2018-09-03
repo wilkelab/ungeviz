@@ -8,6 +8,12 @@
 #' @param .row_key Name of the column that will hold an integer
 #'   counting rows in the final bootstrapped dataset. Useful for
 #'   animations with gganimate.
+#' @examples
+#' library(ggplot2)
+#' ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+#'   geom_point() +
+#'   geom_smooth(data = bootstrapper(5, Species), aes(group = .draw), se = FALSE) +
+#'   facet_wrap(~Species)
 #' @export
 bootstrapper <- function(ndraws, ..., .seed = NULL, .draw_key = ".draw",
                          .row_key = ".row") {
