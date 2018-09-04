@@ -72,6 +72,7 @@ data(BlueJays, package = "Stat2Data")
 bs <- ungeviz::bootstrapper(20, KnownSex)
 
 ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
+  geom_smooth(method = "lm", color = NA) +
   geom_point(alpha = 0.3) +
   # `.row` is a generated column providing a unique row number
   # to all rows in the bootstrapped data frame 
