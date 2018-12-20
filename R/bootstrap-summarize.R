@@ -2,30 +2,36 @@
 #'
 #' Perform bootstrapped actions on data frames (tibbles) respecting any
 #' grouping that has been set up. The function `bootstrap_summarize()` is
-#' a drop-in replacement for `[dplyr::summarize()]` and the function
-#' `bootstrap_do()` is a drop-in replacement for `[dplyr::do()]`. The
+#' a drop-in replacement for [`dplyr::summarize()`] and the function
+#' `bootstrap_do()` is a drop-in replacement for [`dplyr::do()`]. The
 #' function `bootstrap()` simply generates bootstrapped data sets and
 #' returns them in a combined table.
 #'
 #' @param .data Data frame on which to operate.
-#' @param ndraws Number of independent bootstrap draws to perform.
-#' @param ... Other arguments handed off to `[summarize()]` or `[do()]`.
-#' @param .draw_key Name of the column that will hold an integer
-#'   running from 1 to `ndraws` indicating the bootstrap replicate.
+#' @param times Number of independent bootstrap draws to perform.
+#' @param ... Other arguments handed off to [`summarize()`], [`do()`],
+#'   or [`collect()`].
+#' @param key Name of the column that will hold an integer
+#'   running from 1 to `times` indicating the bootstrap replicate.
+#' @examples
+#' iris %>% group_by(Species) %>%
+#'   bootstrap_summarize(3, mean_sepal_length = mean(Sepal.Length))
+#'
+#' data(BlueJays, package = "Stat2Data")
+#' BlueJays %>% group_by(KnownSex) %>%
+#'   bootstrap_do(
+#'     5,
+#'     broom::tidy(lm(BillLength ~ Head, data = .))
+#'   )
 #' @export
-bootstrap_summarize <- function(.data, ndraws, ..., .draw_key = ".draw") {
+bootstrap_summarize <- function(.data, times, ..., key = ".bootstrap") {
   args <- enquos(...)
+  key <- enquo(key)
 
-  resample_sum <- function(.data, argquos, i) {
-    n <- nrow(.data)
-    ids <- sample(n, n, replace = TRUE)
-    summarize(.data[ids, , drop = FALSE], !!!argquos, !!.draw_key := i)
-  }
-
-  do(
-    .data,
-    .draw_df = map_dfr(1:ndraws, function(i) resample_sum(., args, i))
-  ) %>% unnest()
+  summarize(
+    bootstrapify(.data, times, key = !!key),
+    !!!args
+  )
 }
 
 #' @rdname bootstrap_summarize
@@ -34,20 +40,14 @@ bootstrap_summarise <- bootstrap_summarize
 
 #' @rdname bootstrap_summarize
 #' @export
-bootstrap_do <- function(.data, ndraws, ..., .draw_key = ".draw") {
+bootstrap_do <- function(.data, times, ..., key = ".bootstrap") {
   args <- enquos(...)
-
-  resample_do <- function(.data, argquos, i) {
-    n <- nrow(.data)
-    ids <- sample(n, n, replace = TRUE)
-    out <- do(.data[ids, , drop = FALSE], !!!argquos)
-    cbind(out, tibble(!!.draw_key := rep(i, nrow(out))))
-  }
+  key <- enquo(key)
 
   do(
-    .data,
-    .draw_df = map_dfr(1:ndraws, function(i) resample_do(., args, i))
-  ) %>% unnest()
+    bootstrapify(.data, times, key = !!key),
+    !!!args
+  )
 }
 
 #' @rdname bootstrap_summarize
@@ -55,34 +55,38 @@ bootstrap_do <- function(.data, ndraws, ..., .draw_key = ".draw") {
 #' library(ggplot2)
 #' library(dplyr)
 #'
-#' mtcars %>% ungeviz::bootstrap(20) %>%
+#' mtcars %>% bootstrap_collect(20) %>%
 #'   ggplot(aes(hp, mpg)) +
 #'   geom_point(data = mtcars) +
-#'   geom_smooth(aes(group = .draw), method = "lm", se = FALSE)
+#'   geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE)
 #'
 #' \dontrun{
 #' library(gganimate)
-#' mtcars %>% ungeviz::bootstrap(20) %>%
+#' mtcars %>% bootstrap_collect(20) %>%
 #'   ggplot(aes(hp, mpg)) +
 #'   geom_point(data = mtcars) +
-#'   geom_smooth(aes(group = .draw), method = "lm", se = FALSE) +
-#'   transition_states(.draw, 1, 1) +
+#'   geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE) +
+#'   transition_states(.bootstrap, 1, 1) +
 #'   shadow_mark(color = "gray60", size = 0.3)
 #' }
 #' @export
-bootstrap <- function(.data, ndraws, .draw_key = ".draw") {
-  bootstrap_do(
-    .data,
-    ndraws = ndraws,
-    out = {.},
-    .draw_key = .draw_key
-  ) %>%
-    select(out, !!.draw_key) %>%
-    unnest() %>%
-    group_by(!!as.symbol(.draw_key))
+bootstrap_collect <- function(.data, times, ..., key = ".bootstrap") {
+  key <- enquo(key)
+
+  key <- enquo(key)
+
+  collect(
+    bootstrapify(.data, times, key = !!key),
+    ...
+  )
 }
 
-
-
+#' @rdname boostrap_summarize
+#' @usage NULL
+#' @export
+bootstrap <- function(...) {
+  warning("Function ungeviz::bootstrap() is deprecated. Use ungeviz::bootstrap_collect().", call. = FALSE)
+  bootstrap_collect(...)
+}
 
 
