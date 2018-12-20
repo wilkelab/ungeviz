@@ -19,7 +19,9 @@
 #'  * `confidence`: Confidence level used to calculate the `moe` statistic.
 #'    This defaults to 0.95 (`moe` corresponds to 95\% confidence interval).
 #'
-#'
+#' @source
+#' Adrian W. Bowman. Graphs for Uncertainty. J. R. Statist. Soc. A 182:1-16, 2018.
+#' \url{http://www.rss.org.uk/Images/PDF/events/2018/Bowman-5-Sept-2018.pdf}
 #' @examples
 #' library(tidyverse)
 #'
