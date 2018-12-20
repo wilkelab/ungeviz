@@ -14,6 +14,7 @@ Imports:
 License: GPL-2 | file LICENSE
 LazyData: true
 Suggests:
+    ggridges,
     knitr,
     rmarkdown,
     testthat,
@@ -23,7 +24,7 @@ Collate:
     'bootstrapper.R'
     'bootstrap-summarize.R'
     'geom-errorpoint.R'
-    'stat-conf-strip.R'
+    'stat-confidence-density.R'
     'stat-summary-boot.R'
     'ungeviz.R'
 RoxygenNote: 6.1.0

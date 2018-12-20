@@ -96,8 +96,8 @@ df_model <- lm(mpg ~ disp + hp + qsec, data = mtcars) %>%
   tidy() %>%
   filter(term != "(Intercept)")
 
-ggplot(df_model, aes(estimate = estimate, moe = std.error, y = term)) +
-  stat_conf_strip(fill = "lightblue", height = 0.8) +
+ggplot(df_model, aes(x = estimate, moe = std.error, y = term)) +
+  stat_confidence_density(fill = "lightblue", height = 0.8, confidence = 0.68) +
   geom_point(aes(x = estimate), size = 3) +
   geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), height = 0.5) +
   scale_alpha_identity() +
