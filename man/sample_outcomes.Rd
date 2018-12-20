@@ -15,6 +15,7 @@ GAMs fitted with \code{\link[mgcv:gam]{mgcv::gam()}}.
 }
 \examples{
 library(mgcv)
+library(ggplot2)
 fit <- gam(mpg ~ s(disp), data = mtcars, method = "REML")
 
 newdata <- data.frame(
@@ -25,7 +26,31 @@ newdata <- data.frame(
 )
 
 sample_df <- sample_outcomes(fit, newdata, 10, unconditional = TRUE)
+conf <- confidence_band(fit, newdata, unconditional = TRUE)
 ggplot(mtcars, aes(disp, mpg)) +
- geom_point(color = "grey30", size = 0.5) +
- geom_line(data = sample_df, aes(group = .bootstrap), color = "#0072B2", size = 0.3)
+  geom_ribbon(data = conf, aes(ymin = lo, ymax = hi), fill="#80808080", color = NA) +
+  geom_point(color = "grey30", size = 0.5) +
+  geom_line(data = sample_df, aes(group = .bootstrap), color = "#0072B2", size = 0.3) +
+  geom_line(data = conf, size = 1, color = "darkred")
+
+\dontrun{
+library(gganimate)
+
+data(BlueJays, package = "Stat2Data")
+
+fit <- gam(Skull ~ s(BillDepth) + s(BillWidth), data = BlueJays, method = "REML")
+
+newdata <- expand.grid(
+  BillWidth = seq(min(BlueJays$BillWidth), max(BlueJays$BillWidth), length.out = 20),
+  BillDepth = seq(min(BlueJays$BillDepth), max(BlueJays$BillDepth), length.out = 20)
+)
+
+sample_df <- sample_outcomes(fit, newdata, 30, unconditional = TRUE)
+ggplot(BlueJays, aes(BillDepth, BillWidth)) +
+  geom_tile(data = sample_df, aes(fill = Skull), alpha = 0.5, color = NA) +
+  geom_point(aes(size = Skull), color = "black", shape = 21, fill = NA) +
+  scale_fill_viridis_c(option = "D", guide = guide_legend(override.aes = list(alpha = 0.5))) +
+  theme_minimal() + #facet_wrap(~.bootstrap) # uncomment for static plot
+  transition_states(.bootstrap, 1, 0)
+}
 }

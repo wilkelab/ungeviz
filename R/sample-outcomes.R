@@ -39,7 +39,7 @@
 #' ggplot(BlueJays, aes(BillDepth, BillWidth)) +
 #'   geom_tile(data = sample_df, aes(fill = Skull), alpha = 0.5, color = NA) +
 #'   geom_point(aes(size = Skull), color = "black", shape = 21, fill = NA) +
-#'   scale_fill_viridis_c(option = "D", guide = guide_legend(override.aes = list(alpha = 0.4))) +
+#'   scale_fill_viridis_c(option = "D", guide = guide_legend(override.aes = list(alpha = 0.5))) +
 #'   theme_minimal() + #facet_wrap(~.bootstrap) # uncomment for static plot
 #'   transition_states(.bootstrap, 1, 0)
 #' }

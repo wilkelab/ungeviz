@@ -24,13 +24,13 @@ Suggests:
     ggridges,
     knitr,
     rmarkdown,
+    Stat2Data,
     testthat,
     vdiffr
 VignetteBuilder: knitr
 Collate:
     'bootstrapper.R'
     'bootstrap-summarize.R'
-    'geom-errorpoint.R'
     'sample-outcomes.R'
     'stat-confidence-density.R'
     'stat-summary-boot.R'
