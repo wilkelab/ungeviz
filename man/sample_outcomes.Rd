@@ -2,9 +2,12 @@
 % Please edit documentation in R/sample-outcomes.R
 \name{sample_outcomes}
 \alias{sample_outcomes}
+\alias{confidence_band}
 \title{Sample outcomes from a fitted model}
 \usage{
-sample_outcomes(model, newdata, samples = 20, ...)
+sample_outcomes(model, newdata, times = 20, ...)
+
+confidence_band(model, newdata, level = 0.95, n = 100, ...)
 }
 \description{
 Currently, sampling of fitted models is only implemented for
@@ -24,5 +27,5 @@ newdata <- data.frame(
 sample_df <- sample_outcomes(fit, newdata, 10, unconditional = TRUE)
 ggplot(mtcars, aes(disp, mpg)) +
  geom_point(color = "grey30", size = 0.5) +
- geom_line(data = sample_df, aes(group = .draw), color = "#0072B2", size = 0.3)
+ geom_line(data = sample_df, aes(group = .bootstrap), color = "#0072B2", size = 0.3)
 }
