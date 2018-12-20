@@ -10,7 +10,14 @@ URL: https://github.com/clauswilke/ungeviz
 Depends:
     R (>= 3.1.0)
 Imports:
-    ggplot2
+    ggplot2,
+    dplyr,
+    mvtnorm,
+    purrr,
+    tidyr,
+    tibble,
+    rlang,
+    withr
 License: GPL-2 | file LICENSE
 LazyData: true
 Suggests:
@@ -24,6 +31,7 @@ Collate:
     'bootstrapper.R'
     'bootstrap-summarize.R'
     'geom-errorpoint.R'
+    'sample-outcomes.R'
     'stat-confidence-density.R'
     'stat-summary-boot.R'
     'ungeviz.R'

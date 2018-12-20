@@ -51,6 +51,24 @@ bootstrap_do <- function(.data, ndraws, ..., .draw_key = ".draw") {
 }
 
 #' @rdname bootstrap_summarize
+#' @examples
+#' library(ggplot2)
+#' library(dplyr)
+#'
+#' mtcars %>% ungeviz::bootstrap(20) %>%
+#'   ggplot(aes(hp, mpg)) +
+#'   geom_point(data = mtcars) +
+#'   geom_smooth(aes(group = .draw), method = "lm", se = FALSE)
+#'
+#' \dontrun{
+#' library(gganimate)
+#' mtcars %>% ungeviz::bootstrap(20) %>%
+#'   ggplot(aes(hp, mpg)) +
+#'   geom_point(data = mtcars) +
+#'   geom_smooth(aes(group = .draw), method = "lm", se = FALSE) +
+#'   transition_states(.draw, 1, 1) +
+#'   shadow_mark(color = "gray60", size = 0.3)
+#' }
 #' @export
 bootstrap <- function(.data, ndraws, .draw_key = ".draw") {
   bootstrap_do(

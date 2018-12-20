@@ -33,3 +33,22 @@ a drop-in replacement for \code{[dplyr::summarize()]} and the function
 function \code{bootstrap()} simply generates bootstrapped data sets and
 returns them in a combined table.
 }
+\examples{
+library(ggplot2)
+library(dplyr)
+
+mtcars \%>\% ungeviz::bootstrap(20) \%>\%
+  ggplot(aes(hp, mpg)) +
+  geom_point(data = mtcars) +
+  geom_smooth(aes(group = .draw), method = "lm", se = FALSE)
+
+\dontrun{
+library(gganimate)
+mtcars \%>\% ungeviz::bootstrap(20) \%>\%
+  ggplot(aes(hp, mpg)) +
+  geom_point(data = mtcars) +
+  geom_smooth(aes(group = .draw), method = "lm", se = FALSE) +
+  transition_states(.draw, 1, 1) +
+  shadow_mark(color = "gray60", size = 0.3)
+}
+}
