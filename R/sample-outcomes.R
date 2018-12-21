@@ -20,7 +20,7 @@
 #' ggplot(mtcars, aes(disp, mpg)) +
 #'   geom_ribbon(data = conf, aes(ymin = lo, ymax = hi), fill="#80808080", color = NA) +
 #'   geom_point(color = "grey30", size = 0.5) +
-#'   geom_line(data = sample_df, aes(group = .bootstrap), color = "#0072B2", size = 0.3) +
+#'   geom_line(data = sample_df, aes(group = .draw), color = "#0072B2", size = 0.3) +
 #'   geom_line(data = conf, size = 1, color = "darkred")
 #'
 #'
@@ -56,7 +56,7 @@
 #'   xlab("bill depth (mm)") +
 #'   ylab("bill width (mm)") +
 #'   ggtitle("Variability in 2d spline model fitted to blue jay data") +
-#'   facet_wrap(~.bootstrap, labeller = as_labeller(function(x) paste0("posterior sample ", x))) +
+#'   facet_wrap(~.draw, labeller = as_labeller(function(x) paste0("posterior sample ", x))) +
 #'   theme_bw() +
 #'   theme(
 #'     legend.direction = "horizontal",
@@ -65,7 +65,7 @@
 #'     legend.title.align = 0.5
 #'   )
 #' @export
-sample_outcomes <- function(model, newdata, times = 20, ...) {
+sample_outcomes <- function(model, newdata, times = 20, key = ".draw", ...) {
   UseMethod("sample_outcomes", model)
 }
 
@@ -78,10 +78,11 @@ sample_outcomes.default <- function(model, ...) {
 }
 
 #'@export
-sample_outcomes.gam <- function(model, newdata, times = 20, unconditional = FALSE) {
+sample_outcomes.gam <- function(model, newdata, times = 20, key = ".draw", unconditional = FALSE) {
   # original code concept: Noam Ross
   # https://gist.github.com/noamross/8bf1fc5b2f629b3a7e1eb6b4572e8388
   response <- rlang::expr_name(attr(model$terms, "variables")[[2]])
+  key <- enquo(key)
 
   # Get the linear prediction matrix
   pred_mat <- predict(
@@ -100,7 +101,7 @@ sample_outcomes.gam <- function(model, newdata, times = 20, unconditional = FALS
   pred_df <- as_tibble(preds) %>%
     set_names(as.character(1:times)) %>%
     cbind(newdata) %>%
-    gather(.bootstrap, !!response, 1:times)
+    gather(!!key, !!response, 1:times)
 
   pred_df
 }

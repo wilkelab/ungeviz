@@ -5,7 +5,7 @@
 \alias{confidence_band}
 \title{Sample outcomes from a fitted model}
 \usage{
-sample_outcomes(model, newdata, times = 20, ...)
+sample_outcomes(model, newdata, times = 20, key = ".draw", ...)
 
 confidence_band(model, newdata, level = 0.95, n = 100, ...)
 }
@@ -30,7 +30,7 @@ conf <- confidence_band(fit, newdata, unconditional = TRUE)
 ggplot(mtcars, aes(disp, mpg)) +
   geom_ribbon(data = conf, aes(ymin = lo, ymax = hi), fill="#80808080", color = NA) +
   geom_point(color = "grey30", size = 0.5) +
-  geom_line(data = sample_df, aes(group = .bootstrap), color = "#0072B2", size = 0.3) +
+  geom_line(data = sample_df, aes(group = .draw), color = "#0072B2", size = 0.3) +
   geom_line(data = conf, size = 1, color = "darkred")
 
 
@@ -66,7 +66,7 @@ ggplot(BlueJays, aes(BillDepth, BillWidth)) +
   xlab("bill depth (mm)") +
   ylab("bill width (mm)") +
   ggtitle("Variability in 2d spline model fitted to blue jay data") +
-  facet_wrap(~.bootstrap, labeller = as_labeller(function(x) paste0("posterior sample ", x))) +
+  facet_wrap(~.draw, labeller = as_labeller(function(x) paste0("posterior sample ", x))) +
   theme_bw() +
   theme(
     legend.direction = "horizontal",

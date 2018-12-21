@@ -4,22 +4,29 @@
 \alias{bootstrapper}
 \title{Create a bootstrapper function useful for repeated reproducible bootstrapping}
 \usage{
-bootstrapper(ndraws, ..., .seed = NULL, .draw_key = ".draw",
-  .row_key = ".row")
+bootstrapper(times, group = NULL, seed = NULL, key = ".bootstrap",
+  row = ".row", id = ".id", original_id = ".original_id")
 }
 \arguments{
-\item{ndraws}{Number of independent bootstrap draws to perform.}
+\item{times}{Number of independent bootstrap draws to perform.}
 
-\item{...}{Variables to group by.}
+\item{group}{An optional expression setting up the grouping to use for bootstrapping.}
 
-\item{.seed}{Random seed to use.}
+\item{seed}{Random seed to use.}
 
-\item{.draw_key}{Name of the column that will hold an integer
-running from 1 to \code{ndraws} indicating the bootstrap replicate.}
+\item{key}{Name of the column that will hold an integer
+running from 1 to \code{times} indicating the bootstrap replicate.}
 
-\item{.row_key}{Name of the column that will hold an integer
+\item{row}{Name of the column that will hold an integer
 counting rows in the final bootstrapped dataset. Useful for
 animations with gganimate.}
+
+\item{id}{Name of the column that will hold an integer
+running from 1 to n for each bootstrap, where n is the number
+of observations in each group}
+
+\item{original_id}{Name of the column that indicate the
+original row that the bootstrapped row came from}
 }
 \description{
 Create a bootstrapper function useful for repeated reproducible bootstrapping
@@ -28,6 +35,6 @@ Create a bootstrapper function useful for repeated reproducible bootstrapping
 library(ggplot2)
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
   geom_point() +
-  geom_smooth(data = bootstrapper(5, Species), aes(group = .draw), se = FALSE) +
+  geom_smooth(data = bootstrapper(5, Species), aes(group = .bootstrap), se = FALSE) +
   facet_wrap(~Species)
 }
