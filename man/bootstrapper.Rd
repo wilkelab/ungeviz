@@ -37,4 +37,27 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
   geom_point() +
   geom_smooth(data = bootstrapper(5, Species), aes(group = .bootstrap), se = FALSE) +
   facet_wrap(~Species)
+
+# it is important to set grouping correctly for bootstrapping
+set.seed(1234)
+
+df <- data.frame(
+  type = c(rep("A", 100), rep("B", 10), rep("C", 3)),
+  y = rnorm(113)
+)
+
+# incorrect: bootstrapping ungrouped dataset leads to missing category C
+ggplot(df, aes(type, y)) +
+  geom_pointrange(data = bootstrapper(6, seed = 562), stat = "summary") +
+  facet_wrap(~.bootstrap)
+
+# correct: bootstrapping within groups
+ggplot(df, aes(type, y)) +
+  geom_pointrange(data = bootstrapper(6, type, seed = 562), stat = "summary") +
+  facet_wrap(~.bootstrap)
+
+# also correct: use grouped data frame
+ggplot(group_by(df, type), aes(type, y)) +
+  geom_pointrange(data = bootstrapper(6, seed = 562), stat = "summary") +
+  facet_wrap(~.bootstrap)
 }
