@@ -48,7 +48,7 @@ bootstrapper <- function(times, group = NULL, seed = NULL, key = ".bootstrap",
                          row = ".row", id = ".id", original_id = ".original_id") {
   force(times)
   group <- enquo(group)
-  key <- enquo(key)
+  #key <- enquo(key)
   #row <- enquo(row)
   #id <- enquo(id)
   #original_id <- enquo(original_id)
