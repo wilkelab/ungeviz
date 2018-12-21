@@ -81,7 +81,7 @@ bootstrap_collect <- function(.data, times, ..., key = ".bootstrap") {
   )
 }
 
-#' @rdname boostrap_summarize
+#' @rdname bootstrap_summarize
 #' @usage NULL
 #' @export
 bootstrap <- function(...) {

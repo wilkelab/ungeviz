@@ -5,6 +5,7 @@
 \alias{bootstrap_summarise}
 \alias{bootstrap_do}
 \alias{bootstrap_collect}
+\alias{bootstrap}
 \title{Bootstrapped actions on data frames}
 \usage{
 bootstrap_summarize(.data, times, ..., key = ".bootstrap")
@@ -47,14 +48,14 @@ BlueJays \%>\% group_by(KnownSex) \%>\%
 library(ggplot2)
 library(dplyr)
 
-mtcars \%>\% ungeviz::bootstrap(20) \%>\%
+mtcars \%>\% bootstrap_collect(20) \%>\%
   ggplot(aes(hp, mpg)) +
   geom_point(data = mtcars) +
   geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE)
 
 \dontrun{
 library(gganimate)
-mtcars \%>\% ungeviz::bootstrap(20) \%>\%
+mtcars \%>\% bootstrap_collect(20) \%>\%
   ggplot(aes(hp, mpg)) +
   geom_point(data = mtcars) +
   geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE) +

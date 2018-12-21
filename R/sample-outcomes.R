@@ -23,26 +23,47 @@
 #'   geom_line(data = sample_df, aes(group = .bootstrap), color = "#0072B2", size = 0.3) +
 #'   geom_line(data = conf, size = 1, color = "darkred")
 #'
-#' \dontrun{
-#' library(gganimate)
 #'
 #' data(BlueJays, package = "Stat2Data")
 #'
-#' fit <- gam(Skull ~ s(BillDepth) + s(BillWidth), data = BlueJays, method = "REML")
+#' fit <- gam(Skull ~ s(BillDepth, BillWidth), data = BlueJays, method = "REML")
 #'
 #' newdata <- expand.grid(
 #'   BillWidth = seq(min(BlueJays$BillWidth), max(BlueJays$BillWidth), length.out = 20),
 #'   BillDepth = seq(min(BlueJays$BillDepth), max(BlueJays$BillDepth), length.out = 20)
 #' )
 #'
-#' sample_df <- sample_outcomes(fit, newdata, 30, unconditional = TRUE)
+#' sample_df <- sample_outcomes(fit, newdata, 9, unconditional = TRUE)
 #' ggplot(BlueJays, aes(BillDepth, BillWidth)) +
 #'   geom_tile(data = sample_df, aes(fill = Skull), alpha = 0.5, color = NA) +
-#'   geom_point(aes(size = Skull), color = "black", shape = 21, fill = NA) +
-#'   scale_fill_viridis_c(option = "D", guide = guide_legend(override.aes = list(alpha = 0.5))) +
-#'   theme_minimal() + #facet_wrap(~.bootstrap) # uncomment for static plot
-#'   transition_states(.bootstrap, 1, 0)
-#' }
+#'   geom_contour(data = sample_df, aes(z = Skull), color = "black", size = 0.3, binwidth = 0.2) +
+#'   geom_point(aes(color = Skull), size = 1.5) +
+#'   scale_fill_viridis_c(
+#'     name = "skull, modeled (mm)",
+#'     option = "D",
+#'     guide = guide_legend(
+#'       title.position = "top",
+#'       order = 2,
+#'       override.aes = list(alpha = 0.5)
+#'     )
+#'   ) +
+#'   scale_color_viridis_c(
+#'     name = "skull, observed (mm)",
+#'     option = "D",
+#'     guide = guide_legend(title.position = "top", order = 1)
+#'   ) +
+#'   coord_cartesian(expand = FALSE) +
+#'   xlab("bill depth (mm)") +
+#'   ylab("bill width (mm)") +
+#'   ggtitle("Variability in 2d spline model fitted to blue jay data") +
+#'   facet_wrap(~.bootstrap, labeller = as_labeller(function(x) paste0("posterior sample ", x))) +
+#'   theme_bw() +
+#'   theme(
+#'     legend.direction = "horizontal",
+#'     legend.position = "bottom",
+#'     legend.justification = "right",
+#'     legend.title.align = 0.5
+#'   )
 #' @export
 sample_outcomes <- function(model, newdata, times = 20, ...) {
   UseMethod("sample_outcomes", model)
