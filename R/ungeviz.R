@@ -9,4 +9,5 @@
 #' @import rlang
 #' @importFrom withr with_seed
 #' @importFrom purrr map_dfr
+#' @importFrom strapgod bootstrapify
 NULL

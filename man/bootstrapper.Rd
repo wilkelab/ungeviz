@@ -10,22 +10,23 @@ bootstrapper(times, group = NULL, seed = NULL, key = ".bootstrap",
 \arguments{
 \item{times}{Number of independent bootstrap draws to perform.}
 
-\item{group}{An optional expression setting up the grouping to use for bootstrapping.}
+\item{group}{An optional expression setting up the grouping to use for bootstrapping.
+If not provided, any grouping present in the original dataset will be used.}
 
 \item{seed}{Random seed to use.}
 
-\item{key}{Name of the column that will hold an integer
+\item{key}{Name (as character) of the column that will hold an integer
 running from 1 to \code{times} indicating the bootstrap replicate.}
 
-\item{row}{Name of the column that will hold an integer
+\item{row}{Name (as character) of the column that will hold an integer
 counting rows in the final bootstrapped dataset. Useful for
 animations with gganimate.}
 
-\item{id}{Name of the column that will hold an integer
+\item{id}{Name (as character) of the column that will hold an integer
 running from 1 to n for each bootstrap, where n is the number
 of observations in each group}
 
-\item{original_id}{Name of the column that indicate the
+\item{original_id}{Name (as character) of the column that indicate the
 original row that the bootstrapped row came from}
 }
 \description{
