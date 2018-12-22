@@ -24,7 +24,7 @@
 #'     broom::tidy(lm(BillLength ~ Head, data = .))
 #'   )
 #' @export
-bootstrap_summarize <- function(.data, times, ..., key = ".bootstrap") {
+bootstrap_summarize <- function(.data, times, ..., key = ".draw") {
   args <- enquos(...)
   key <- enquo(key)
 
@@ -40,7 +40,7 @@ bootstrap_summarise <- bootstrap_summarize
 
 #' @rdname bootstrap_summarize
 #' @export
-bootstrap_do <- function(.data, times, ..., key = ".bootstrap") {
+bootstrap_do <- function(.data, times, ..., key = ".draw") {
   args <- enquos(...)
   key <- enquo(key)
 
@@ -58,19 +58,19 @@ bootstrap_do <- function(.data, times, ..., key = ".bootstrap") {
 #' mtcars %>% bootstrap_collect(20) %>%
 #'   ggplot(aes(hp, mpg)) +
 #'   geom_point(data = mtcars) +
-#'   geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE)
+#'   geom_smooth(aes(group = .draw), method = "lm", se = FALSE)
 #'
 #' \dontrun{
 #' library(gganimate)
 #' mtcars %>% bootstrap_collect(20) %>%
 #'   ggplot(aes(hp, mpg)) +
 #'   geom_point(data = mtcars) +
-#'   geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE) +
-#'   transition_states(.bootstrap, 1, 1) +
+#'   geom_smooth(aes(group = .draw), method = "lm", se = FALSE) +
+#'   transition_states(.draw, 1, 1) +
 #'   shadow_mark(color = "gray60", size = 0.3)
 #' }
 #' @export
-bootstrap_collect <- function(.data, times, ..., key = ".bootstrap") {
+bootstrap_collect <- function(.data, times, ..., key = ".draw") {
   key <- enquo(key)
 
   key <- enquo(key)

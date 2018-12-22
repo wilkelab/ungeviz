@@ -4,8 +4,9 @@
 \alias{bootstrapper}
 \title{Create a bootstrapper function useful for repeated reproducible bootstrapping}
 \usage{
-bootstrapper(times, group = NULL, seed = NULL, key = ".bootstrap",
-  row = ".row", id = ".id", original_id = ".original_id")
+bootstrapper(times, group = NULL, seed = NULL, key = ".draw",
+  row = ".row", id = ".id", original_id = ".original_id",
+  copies = ".copies")
 }
 \arguments{
 \item{times}{Number of independent bootstrap draws to perform.}
@@ -24,19 +25,25 @@ animations with gganimate.}
 
 \item{id}{Name (as character) of the column that will hold an integer
 running from 1 to n for each bootstrap, where n is the number
-of observations in each group}
+of observations in each group.}
 
 \item{original_id}{Name (as character) of the column that indicate the
-original row that the bootstrapped row came from}
+original row that the bootstrapped row came from.}
+
+\item{copies}{Name (as character) of the column that reports how often
+a specific original row has been oversampled.}
 }
 \description{
 Create a bootstrapper function useful for repeated reproducible bootstrapping
 }
 \examples{
+bs <- bootstrapper(3)
+bs(data.frame(letter = letters[1:4]))
+
 library(ggplot2)
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
   geom_point() +
-  geom_smooth(data = bootstrapper(5, Species), aes(group = .bootstrap), se = FALSE) +
+  geom_smooth(data = bootstrapper(5, Species), aes(group = .draw), se = FALSE) +
   facet_wrap(~Species)
 
 # it is important to set grouping correctly for bootstrapping
@@ -50,15 +57,41 @@ df <- data.frame(
 # incorrect: bootstrapping ungrouped dataset leads to missing category C
 ggplot(df, aes(type, y)) +
   geom_pointrange(data = bootstrapper(6, seed = 562), stat = "summary") +
-  facet_wrap(~.bootstrap)
+  facet_wrap(~.draw)
 
 # correct: bootstrapping within groups
 ggplot(df, aes(type, y)) +
   geom_pointrange(data = bootstrapper(6, type, seed = 562), stat = "summary") +
-  facet_wrap(~.bootstrap)
+  facet_wrap(~.draw)
 
 # also correct: use grouped data frame
 ggplot(group_by(df, type), aes(type, y)) +
   geom_pointrange(data = bootstrapper(6, seed = 562), stat = "summary") +
-  facet_wrap(~.bootstrap)
+  facet_wrap(~.draw)
+
+\dontrun{
+library(gganimate)
+
+set.seed(69527)
+x <- rnorm(15)
+data <- data.frame(
+  x,
+  y = x + 0.5*rnorm(15)
+)
+
+bs <- bootstrapper(9)
+
+p <- ggplot(data, aes(x, y)) +
+  geom_point(shape = 21, size = 6, fill = "white") +
+  geom_text(label = "0", hjust = 0.5, vjust = 0.5, size = 10/.pt) +
+  geom_point(data = bs, aes(group = .row), shape = 21, size = 6, fill = "blue") +
+  geom_text(data = bs, aes(label = .copies, group = .row), hjust = 0.5, vjust = 0.5, size = 10/.pt, color = "white") +
+  geom_smooth(data = bs, method = "lm", se = FALSE) +
+  ggtitle("Bootstrap demonstration") +
+  theme_bw()
+
+p + facet_wrap(~.draw)
+p + transition_states(.draw, 1, 1) +
+  enter_fade() + exit_fade()
+}
 }

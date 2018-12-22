@@ -8,13 +8,13 @@
 \alias{bootstrap}
 \title{Bootstrapped actions on data frames}
 \usage{
-bootstrap_summarize(.data, times, ..., key = ".bootstrap")
+bootstrap_summarize(.data, times, ..., key = ".draw")
 
-bootstrap_summarise(.data, times, ..., key = ".bootstrap")
+bootstrap_summarise(.data, times, ..., key = ".draw")
 
-bootstrap_do(.data, times, ..., key = ".bootstrap")
+bootstrap_do(.data, times, ..., key = ".draw")
 
-bootstrap_collect(.data, times, ..., key = ".bootstrap")
+bootstrap_collect(.data, times, ..., key = ".draw")
 }
 \arguments{
 \item{.data}{Data frame on which to operate.}
@@ -51,15 +51,15 @@ library(dplyr)
 mtcars \%>\% bootstrap_collect(20) \%>\%
   ggplot(aes(hp, mpg)) +
   geom_point(data = mtcars) +
-  geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE)
+  geom_smooth(aes(group = .draw), method = "lm", se = FALSE)
 
 \dontrun{
 library(gganimate)
 mtcars \%>\% bootstrap_collect(20) \%>\%
   ggplot(aes(hp, mpg)) +
   geom_point(data = mtcars) +
-  geom_smooth(aes(group = .bootstrap), method = "lm", se = FALSE) +
-  transition_states(.bootstrap, 1, 1) +
+  geom_smooth(aes(group = .draw), method = "lm", se = FALSE) +
+  transition_states(.draw, 1, 1) +
   shadow_mark(color = "gray60", size = 0.3)
 }
 }

@@ -38,9 +38,9 @@ diamonds %>% group_by(cut, color, clarity) %>%
   ggplot(aes(color, mean_price, color = clarity)) +
     geom_point() + facet_wrap(~cut) +
     theme_bw() + 
-    # `.bootstrap` is a generated column indicating the bootstrap
+    # `.draw` is a generated column indicating the bootstrap
     # draw a data row belongs to 
-    transition_states(.bootstrap, 1, 1)
+    transition_states(.draw, 1, 1)
 ```
 
 ![](man/figures/README-diamonds-mean-anim-1.gif)<!-- -->
@@ -60,7 +60,7 @@ mtcars %>% bootstrap_collect(20) %>%
       se = FALSE
     ) + 
     theme_bw() +
-    transition_states(.bootstrap, 1, 1)
+    transition_states(.draw, 1, 1)
 ```
 
 ![](man/figures/README-mtcars-smooth-anim-1.gif)<!-- -->
@@ -82,7 +82,7 @@ ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
   facet_wrap(~KnownSex, scales = "free_x") +
   scale_color_manual(values = c(F = "#D55E00", M = "#0072B2"), guide = "none") +
   theme_bw() +
-  transition_states(.bootstrap, 1, 1) + 
+  transition_states(.draw, 1, 1) + 
   enter_fade() + 
   exit_fade()
 ```
