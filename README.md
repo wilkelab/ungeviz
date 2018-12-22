@@ -24,9 +24,9 @@ devtools::install_github("clauswilke/ungeviz")
 The functions `bootstrap_summarize()` and `bootstrap_do()` are drop-in
 equivalents for dplyr’s `summarize()` and `do()` but perform the
 respective action multiple times on bootstrapped data. Similarly, the
-function `bootstrap()` generates a bootstrapped data frame and the
-function `bootstrapper()` generates a bootstrapping object that can be
-used instead of data in ggplot2 layers.
+function `bootstrap_collect()` generates a bootstrapped data frame and
+the function `bootstrapper()` generates a bootstrapping object that can
+be used instead of data in ggplot2 layers.
 
 ``` r
 library(tidyverse)
@@ -46,7 +46,7 @@ diamonds %>% group_by(cut, color, clarity) %>%
 ![](man/figures/README-diamonds-mean-anim-1.gif)<!-- -->
 
 ``` r
-mtcars %>% bootstrap(20) %>%
+mtcars %>% bootstrap_collect(20) %>%
   ggplot(aes(mpg, hp)) + 
     geom_smooth(
       data = mtcars,
@@ -61,8 +61,6 @@ mtcars %>% bootstrap(20) %>%
     ) + 
     theme_bw() +
     transition_states(.bootstrap, 1, 1)
-#> Warning: Function ungeviz::bootstrap() is deprecated. Use
-#> ungeviz::bootstrap_collect().
 ```
 
 ![](man/figures/README-mtcars-smooth-anim-1.gif)<!-- -->
