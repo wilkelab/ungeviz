@@ -16,6 +16,8 @@
 #'   original row that the bootstrapped row came from.
 #' @param copies Name (as character) of the column that reports how often
 #'   a specific original row has been oversampled.
+#' @seealso
+#' [`sampler()`]
 #' @examples
 #' bs <- bootstrapper(3)
 #' bs(data.frame(letter = letters[1:4]))

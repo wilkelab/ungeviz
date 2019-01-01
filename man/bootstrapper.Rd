@@ -95,3 +95,6 @@ p + transition_states(.draw, 1, 1) +
   enter_fade() + exit_fade()
 }
 }
+\seealso{
+\code{\link[=sampler]{sampler()}}
+}

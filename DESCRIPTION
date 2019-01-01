@@ -29,13 +29,6 @@ Suggests:
     testthat,
     vdiffr
 VignetteBuilder: knitr
-Collate:
-    'bootstrapper.R'
-    'bootstrap-summarize.R'
-    'sample-outcomes.R'
-    'stat-confidence-density.R'
-    'stat-summary-boot.R'
-    'ungeviz.R'
 Remotes:
     DavisVaughan/strapgod
 RoxygenNote: 6.1.0
