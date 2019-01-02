@@ -106,8 +106,8 @@ sampler <- function(times, size = 1, replace = FALSE, group = NULL, seed = NULL,
 
         .data %>%
           do(sampling_fun(.)) %>%
-#          # would want to replace the `do` line with the following:
-#          samplify(times, key = !!key) %>%
+#          # would want to replace the `do` line with something like the following:
+#          samplify(times, size = size, replace = replace, key = !!key) %>%
 #          collect(id = id, original_id = original_id) %>%
           mutate(
             !!row := 1
