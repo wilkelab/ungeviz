@@ -22,6 +22,8 @@ Imports:
 License: GPL-2 | file LICENSE
 LazyData: true
 Suggests:
+    broom,
+    emmeans,
     ggridges,
     knitr,
     rmarkdown,

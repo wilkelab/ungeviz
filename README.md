@@ -6,9 +6,10 @@
 Tools for visualizing uncertainty with ggplot2, written by Claus O.
 Wilke
 
-This package is in the very early stages of development. Most things are
-broken. However, the bootstrapping functions may already be useful for
-generating hypothetical outcomes plots.
+This package is meant to provide helpful add-on functionality for
+ggplot2 to visualize uncertainty. The package is particularly focused on
+hypothetical outcome plots (HOPs) and provides bootstrapping and
+sampling functionality that integrates well with the ggplot2 API.
 
 The package name comes from the German word “Ungewissheit”, which means
 uncertainty.
@@ -19,58 +20,55 @@ uncertainty.
 devtools::install_github("clauswilke/ungeviz")
 ```
 
-## Bootstrapping
+## Sampling and bootstrapping
 
-The functions `bootstrap_summarize()` and `bootstrap_do()` are drop-in
-equivalents for dplyr’s `summarize()` and `do()` but perform the
-respective action multiple times on bootstrapped data. Similarly, the
-function `bootstrap_collect()` generates a bootstrapped data frame and
-the function `bootstrapper()` generates a bootstrapping object that can
-be used instead of data in ggplot2 layers.
+The `sampler()` and `bootstrapper()` functions generate sampling and
+bootstrapping objects, respectively, that can be used in place of data
+in ggplot2 layers. These objects are helpful when creating HOPs.
 
 ``` r
 library(tidyverse)
 library(ungeviz)
 library(gganimate)
 
-diamonds %>% group_by(cut, color, clarity) %>%
-  bootstrap_summarize(20, mean_price = mean(price)) %>%
-  ggplot(aes(color, mean_price, color = clarity)) +
-    geom_point() + facet_wrap(~cut) +
-    theme_bw() + 
-    # `.draw` is a generated column indicating the bootstrap
-    # draw a data row belongs to 
-    transition_states(.draw, 1, 1)
+cacao %>% filter(location %in% c("Canada", "U.S.A.")) %>%
+  ggplot(aes(rating, location)) +
+  geom_point(
+    position = position_jitter(height = 0.3, width = 0.05), 
+    size = 0.4, color = "#0072B2", alpha = 1/2
+  ) +
+  geom_vpline(data = sampler(25, group = location), height = 0.6, color = "#D55E00") +
+  theme_bw() + 
+  # `.draw` is a generated column indicating the 
+  # sample draw to which a data row belongs
+  transition_states(.draw, 1, 3)
 ```
 
-![](man/figures/README-diamonds-mean-anim-1.gif)<!-- -->
+![](man/figures/README-cacao-samples-anim-1.gif)<!-- -->
 
 ``` r
-mtcars %>% bootstrap_collect(20) %>%
-  ggplot(aes(mpg, hp)) + 
-    geom_smooth(
-      data = mtcars,
-      method = "gam", formula = y ~ s(x, k = 3),
-      color = NA
-    ) + 
-    geom_point(data = mtcars) +
-    geom_smooth(
-      method = "gam",
-      formula = y ~ s(x, k = 3),
-      se = FALSE
-    ) + 
-    theme_bw() +
-    transition_states(.draw, 1, 1)
+ggplot(mtcars, aes(mpg, hp)) + 
+  geom_smooth(method = "gam", formula = y ~ s(x, k = 3), color = NA, alpha = 0.3) + 
+  geom_point() +
+  geom_smooth(
+    data = bootstrapper(20),
+    method = "gam", formula = y ~ s(x, k = 3), se = FALSE, fullrange = TRUE
+  ) + 
+  theme_bw() +
+  transition_states(.draw, 1, 2)
 ```
 
 ![](man/figures/README-mtcars-smooth-anim-1.gif)<!-- -->
+
+Both the bootstrapper and sampler objects can be used for repeated
+reproducible sampling.
 
 ``` r
 data(BlueJays, package = "Stat2Data")
 
 # set up bootstrapping object that generates 20 bootstraps
 # and groups by variable `KnownSex`
-bs <- ungeviz::bootstrapper(20, KnownSex)
+bs <- bootstrapper(20, KnownSex)
 
 ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
   geom_smooth(method = "lm", color = NA) +
@@ -91,8 +89,8 @@ ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
 
 ## Visualizing uncertainty from fitted models
 
-Some very early code exists to help visualizing uncertainty from fitted
-models, for example as confidence strips.
+The new stat `stat_confidence_density()` can be used to generate
+confidence strips.
 
 ``` r
 library(broom)
@@ -101,17 +99,25 @@ library(broom)
 #> The following object is masked from 'package:ungeviz':
 #> 
 #>     bootstrap
+library(emmeans)
 
-df_model <- lm(mpg ~ disp + hp + qsec, data = mtcars) %>%
+cacao_lumped <- cacao %>%
+  mutate(
+    location = fct_lump(location, n = 20)
+  )
+  
+cacao_means <- lm(rating ~ location, data = cacao_lumped) %>%
+  emmeans("location") %>%
   tidy() %>%
-  filter(term != "(Intercept)")
+  mutate(location = fct_reorder(location, estimate))
 
-ggplot(df_model, aes(x = estimate, moe = std.error, y = term)) +
+ggplot(cacao_means, aes(x = estimate, moe = std.error, y = location)) +
   stat_confidence_density(fill = "lightblue", height = 0.8, confidence = 0.68) +
-  geom_point(aes(x = estimate), size = 3) +
+  geom_point(aes(x = estimate), size = 2) +
   geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), height = 0.5) +
   scale_alpha_identity() +
-  xlim(-2, 1)
+  xlim(2.6, 3.7) +
+  theme_minimal()
 ```
 
-![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
+![](man/figures/README-cacao-means-1.png)<!-- -->
