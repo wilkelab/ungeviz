@@ -47,8 +47,7 @@ cacao %>% filter(location %in% c("Canada", "U.S.A.")) %>%
   ) +
   geom_vpline(data = sampler(25, group = location), height = 0.6, color = "#D55E00") +
   theme_bw() + 
-  # `.draw` is a generated column indicating the 
-  # sample draw to which a data row belongs
+  # `.draw` is a generated column indicating the sample draw
   transition_states(.draw, 1, 3)
 ```
 
@@ -76,8 +75,7 @@ bs <- bootstrapper(20, KnownSex)
 ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
   geom_smooth(method = "lm", color = NA) +
   geom_point(alpha = 0.3) +
-  # `.row` is a generated column providing a unique row number
-  # to all rows in the bootstrapped data frame 
+  # `.row` is a generated column providing a unique row number for all rows
   geom_point(data = bs, aes(group = .row)) +
   geom_smooth(data = bs, method = "lm", fullrange = TRUE, se = FALSE) +
   facet_wrap(~KnownSex, scales = "free_x") +

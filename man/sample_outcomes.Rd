@@ -2,20 +2,52 @@
 % Please edit documentation in R/sample-outcomes.R
 \name{sample_outcomes}
 \alias{sample_outcomes}
+\alias{sample_outcomes.gam}
 \alias{confidence_band}
+\alias{confidence_band.gam}
 \title{Sample outcomes from a fitted model}
 \usage{
 sample_outcomes(model, newdata, times = 20, key = ".draw", ...)
 
-confidence_band(model, newdata, level = 0.95, n = 100, ...)
+\method{sample_outcomes}{gam}(model, newdata, times = 20,
+  key = ".draw", unconditional = FALSE)
+
+confidence_band(model, newdata, level = 0.95, ...)
+
+\method{confidence_band}{gam}(model, newdata, level = 0.95,
+  unconditional = FALSE)
+}
+\arguments{
+\item{model}{The fitted model to use for generating outcomes or calculating
+a confidence band.}
+
+\item{newdata}{A data frame containing the values of the model covariates at
+which outcomes or confidence values should be calculated, as in
+\code{\link[=predict.gam]{predict.gam()}}.}
+
+\item{times}{Number of times outcomes should be drawn.}
+
+\item{key}{Character vector holding the name of the column indicating
+separate outcome draws. Default is \code{.draw}.}
+
+\item{unconditional}{Bool indicating whether the smoothing parameter uncertainty
+corrected covariance matrix is used (\code{TRUE}) or not (\code{FALSE}, the default), as in
+\code{\link[=predict.gam]{predict.gam()}}. A choice of \code{unconditional = TRUE} will generally require the
+gam model to be fit by REML (\code{method = "REML"} in the \code{gam()} call).}
+
+\item{level}{Confidence level. Default is 95\%.}
 }
 \description{
-Currently, sampling of fitted models is only implemented for
-GAMs fitted with \code{\link[mgcv:gam]{mgcv::gam()}}.
+Sample outcomes from a fitted model (via \code{sample_outcomes()}) or calculate a
+confidence band for the fitted model (via \code{confidence_band()}). Currently,
+sampling of fitted models is only implemented for gams
+fitted with \code{\link[mgcv:gam]{mgcv::gam()}}.
 }
 \examples{
 library(mgcv)
 library(ggplot2)
+
+# GAM spline fit
 fit <- gam(mpg ~ s(disp), data = mtcars, method = "REML")
 
 newdata <- data.frame(
@@ -28,12 +60,25 @@ newdata <- data.frame(
 sample_df <- sample_outcomes(fit, newdata, 10, unconditional = TRUE)
 conf <- confidence_band(fit, newdata, unconditional = TRUE)
 ggplot(mtcars, aes(disp, mpg)) +
-  geom_ribbon(data = conf, aes(ymin = lo, ymax = hi), fill="#80808080", color = NA) +
+  geom_ribbon(data = conf, aes(ymin = lo, ymax = hi), fill="#80808040", color = NA) +
   geom_point(color = "grey30", size = 0.5) +
   geom_line(data = sample_df, aes(group = .draw), color = "#0072B2", size = 0.3) +
-  geom_line(data = conf, size = 1, color = "darkred")
+  geom_line(data = conf, size = 1, color = "darkred") +
+  theme_bw()
 
+# logistic regression fit
+fit <- gam(vs ~ disp, data = mtcars, family = "binomial")
 
+sample_df <- sample_outcomes(fit, newdata, 20)
+conf <- confidence_band(fit, newdata)
+ggplot(mtcars, aes(disp, vs)) +
+  geom_ribbon(data = conf, aes(ymin = lo, ymax = hi), fill="#80808040", color = NA) +
+  geom_point(color = "black", size = 3, shape = "|") +
+  geom_line(data = sample_df, aes(group = .draw), color = "#0072B2", size = 0.3) +
+  geom_line(data = conf, size = 1, color = "darkred") +
+  theme_bw()
+
+# example in 2D
 data(BlueJays, package = "Stat2Data")
 
 fit <- gam(Skull ~ s(BillDepth, BillWidth), data = BlueJays, method = "REML")
