@@ -22,9 +22,11 @@ Imports:
 License: GPL-2 | file LICENSE
 LazyData: true
 Suggests:
+    cowplot,
     broom,
     emmeans,
     ggridges,
+    glue,
     knitr,
     rmarkdown,
     Stat2Data,

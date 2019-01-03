@@ -85,6 +85,7 @@ stat_smooth_draws <- function(mapping = NULL, times = 10,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      times = times,
       formula = formula,
       n = n,
       fullrange = fullrange,
