@@ -108,7 +108,6 @@ ggplot(cacao_means, aes(x = estimate, moe = std.error, y = location)) +
   stat_confidence_density(fill = "lightblue", height = 0.8, confidence = 0.68) +
   geom_point(aes(x = estimate), size = 2) +
   geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), height = 0.5) +
-  scale_alpha_identity() +
   xlim(2.6, 3.7) +
   theme_minimal()
 ```
