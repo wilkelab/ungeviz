@@ -40,14 +40,14 @@ gam model to be fit by REML (\code{method = "REML"} in the \code{gam()} call).}
 \description{
 Sample outcomes from a fitted model (via \code{sample_outcomes()}) or calculate a
 confidence band for the fitted model (via \code{confidence_band()}). Currently,
-sampling of fitted models is only implemented for gams
+sampling of fitted models is only implemented for generalized additive models
 fitted with \code{\link[mgcv:gam]{mgcv::gam()}}.
 }
 \examples{
 library(mgcv)
 library(ggplot2)
 
-# GAM spline fit
+# gam spline fit
 fit <- gam(mpg ~ s(disp), data = mtcars, method = "REML")
 
 newdata <- data.frame(

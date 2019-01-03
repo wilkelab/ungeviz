@@ -25,38 +25,40 @@
 #' @examples
 #' library(tidyverse)
 #'
-#' params <- data.frame(
-#'   group = letters[1:3],
-#'   mean = c(1, 3, 2),
-#'   sd = c(.8, .4, .7)
-#' )
-#' df_data <- mutate(
-#'   params,
-#'   value = purrr::map2(mean, sd, ~rnorm(250, .x, .y))
-#' ) %>% unnest()
+#' cacao_small <- cacao %>%
+#'   filter(location %in% c("Switzerland", "Canada", "U.S.A.", "Belgium"))
 #'
-#' df_summary <- group_by(df_data, group) %>%
+#' cacao_summary <- cacao_small %>%
+#'   group_by(location) %>%
 #'   summarize(
-#'     mean = mean(value),
-#'     sd = sd(value),
-#'     moe = sd*1.96
+#'     sd = sd(rating),
+#'     moe = sd*1.96,
+#'     rating = mean(rating)
 #'   )
 #'
-#' ggplot(df_summary, aes(x = mean, y = group)) +
-#'   stat_confidence_density(aes(moe = moe, fill = stat(ndensity)), height = 0.8, alpha = NA) +
-#'   geom_point(data = df_data, aes(x = value), position = position_jitter(width = 0), size = 0.5) +
-#'   geom_errorbarh(aes(xmin = mean - sd, xmax = mean + sd), height = 0.2, color = "darkred", size = 1) +
+#' ggplot(cacao_summary, aes(x = rating, y = location)) +
+#'   stat_confidence_density(aes(moe = moe, fill = stat(ndensity)), height = 0.8) +
+#'   geom_point(data = cacao_small, position = position_jitter(width = 0.05), size = 0.3) +
+#'   geom_errorbarh(aes(xmin = rating - sd, xmax = rating + sd), height = 0.3, color = "darkred", size = 1) +
 #'   geom_point(size = 3, color = "darkred") +
-#'   scale_fill_gradient(low = "#132B4300", high = "#56B1F7FF") +
 #'   theme_minimal()
+#'
 #'
 #' library(ggridges)
 #'
-#' ggplot(df_summary, aes(x = mean, y = group)) +
+#' cacao_se <- cacao_small %>%
+#'   group_by(location) %>%
+#'   summarize(
+#'     se = sd(rating)/sqrt(n()),
+#'     moe = se*1.96,
+#'     rating = mean(rating)
+#'   )
+#'
+#' ggplot(cacao_se, aes(x = rating, y = location)) +
 #'   stat_confidence_density(
 #'     geom = "ridgeline",
 #'     aes(moe = moe, height = stat(density)),
-#'     alpha = NA, xlim = c(-1, 4)
+#'     alpha = NA, xlim = c(2.5, 3.75), scale = 0.08
 #'   ) +
 #'   theme_minimal()
 #' @export
@@ -69,7 +71,7 @@ stat_confidence_density <- function(mapping = NULL, data = NULL,
                             na.rm = FALSE,
                             show.legend = FALSE,
                             inherit.aes = TRUE) {
-  layer(
+  l <- layer(
     data = data,
     mapping = mapping,
     stat = StatConfidenceDensity,
@@ -85,6 +87,8 @@ stat_confidence_density <- function(mapping = NULL, data = NULL,
       ...
     )
   )
+
+  list(l, scale_alpha_identity())
 }
 
 #' @rdname stat_confidence_density
