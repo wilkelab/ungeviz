@@ -39,29 +39,15 @@ cacao %>% filter(location %in% c("Canada", "U.S.A.")) %>%
   ) +
   geom_vpline(data = sampler(25, group = location), height = 0.6, color = "#D55E00") +
   theme_bw() + 
-  # `.draw` is a generated column indicating the 
-  # sample draw to which a data row belongs
+  # `.draw` is a generated column indicating the sample draw
   transition_states(.draw, 1, 3)
 ```
 
 ![](man/figures/README-cacao-samples-anim-1.gif)<!-- -->
 
-``` r
-ggplot(mtcars, aes(mpg, hp)) + 
-  geom_smooth(method = "gam", formula = y ~ s(x, k = 3), color = NA, alpha = 0.3) + 
-  geom_point() +
-  geom_smooth(
-    data = bootstrapper(20),
-    method = "gam", formula = y ~ s(x, k = 3), se = FALSE, fullrange = TRUE
-  ) + 
-  theme_bw() +
-  transition_states(.draw, 1, 2)
-```
-
-![](man/figures/README-mtcars-smooth-anim-1.gif)<!-- -->
-
 Both the bootstrapper and sampler objects can be used for repeated
-reproducible sampling.
+reproducible sampling, by passing the sampe bootstrapper or sampler
+object as data to multiple ggplot2 layers.
 
 ``` r
 data(BlueJays, package = "Stat2Data")
@@ -73,8 +59,7 @@ bs <- bootstrapper(20, KnownSex)
 ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
   geom_smooth(method = "lm", color = NA) +
   geom_point(alpha = 0.3) +
-  # `.row` is a generated column providing a unique row number
-  # to all rows in the bootstrapped data frame 
+  # `.row` is a generated column providing a unique row number for all rows
   geom_point(data = bs, aes(group = .row)) +
   geom_smooth(data = bs, method = "lm", fullrange = TRUE, se = FALSE) +
   facet_wrap(~KnownSex, scales = "free_x") +
@@ -87,18 +72,32 @@ ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
 
 ![](man/figures/README-bluejays-lm-anim-1.gif)<!-- -->
 
-## Visualizing uncertainty from fitted models
+## Smooth draws
 
-The new stat `stat_confidence_density()` can be used to generate
-confidence strips.
+Instead of bootstrapping smoothers or regression lines, we can also fit
+a smoothing model to the data and then generate fit lines by randomly
+drawing from the posterior distribution. This strategy is automated in
+`stat_smooth_draws()`, which works similar to `stat_smooth()` but
+generates multiple equal probable fit draws rather than one best-fit
+line.
+
+``` r
+ggplot(mtcars, aes(mpg, hp)) + 
+  geom_point() +
+  stat_smooth_draws(times = 20) + 
+  theme_bw() +
+  transition_states(stat(.draw), 1, 2)
+```
+
+![](man/figures/README-mtcars-smooth-anim-1.gif)<!-- -->
+
+## Confidence strips
+
+The ungeviz package provides a convenient way of drawing confidence
+strips, via `stat_confidence_density()`.
 
 ``` r
 library(broom)
-#> 
-#> Attaching package: 'broom'
-#> The following object is masked from 'package:ungeviz':
-#> 
-#>     bootstrap
 library(emmeans)
 
 cacao_lumped <- cacao %>%
@@ -115,7 +114,6 @@ ggplot(cacao_means, aes(x = estimate, moe = std.error, y = location)) +
   stat_confidence_density(fill = "lightblue", height = 0.8, confidence = 0.68) +
   geom_point(aes(x = estimate), size = 2) +
   geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), height = 0.5) +
-  scale_alpha_identity() +
   xlim(2.6, 3.7) +
   theme_minimal()
 ```

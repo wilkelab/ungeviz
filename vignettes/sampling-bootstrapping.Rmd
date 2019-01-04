@@ -21,3 +21,24 @@ set.seed(5743)
 animate = FALSE
 animate = TRUE # uncomment to build animated plots
 ```
+
+The functions `sampler()` and `bootstrapper()` generate sampling and bootstrapping objects that are useful in ggplot2 layers. They are meant to sample from or bootstrap data frames.
+
+As an introduction to their use, let's start by sampling three times two rows each (without replacement) from a data frame that holds one row for each letter in the alphabet.
+```{r}
+library(ungeviz)
+
+# sampling object that samples 3 times a sample size of 2
+spl <- sampler(times = 3, size = 2)
+
+# input data frame
+df <- data.frame(letters = letters, number = 1:26)
+head(df)
+
+# resample the data frame
+spl(df)
+
+# repeated application of the same sampler object produces the same sample
+spl(df)
+```
+
