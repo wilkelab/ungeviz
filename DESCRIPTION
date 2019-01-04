@@ -6,7 +6,7 @@ Authors@R: c(
     person("Claus O.", "Wilke", , "wilke@austin.utexas.edu", c("cre", "aut")))
 Description: This package provides add-on functionality for ggplot2 to make
     it easier to visualize uncertainty (which is called Ungewissheit in German).
-URL: https://github.com/clauswilke/ungeviz
+URL: https://github.com/wilkelab/ungeviz
 Depends:
     R (>= 3.1.0)
 Imports:

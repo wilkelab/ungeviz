@@ -3,8 +3,7 @@
 
 # ungeviz
 
-Tools for visualizing uncertainty with ggplot2, written by Claus O.
-Wilke
+Tools for visualizing uncertainty with ggplot2.
 
 This package is meant to provide helpful add-on functionality for
 ggplot2 to visualize uncertainty. The package is particularly focused on
@@ -17,7 +16,7 @@ uncertainty.
 ## Installation
 
 ``` r
-devtools::install_github("clauswilke/ungeviz")
+devtools::install_github("wilkelab/ungeviz")
 ```
 
 ## Sampling and bootstrapping
@@ -46,7 +45,7 @@ cacao %>% filter(location %in% c("Canada", "U.S.A.")) %>%
 ![](man/figures/README-cacao-samples-anim-1.gif)<!-- -->
 
 Both the bootstrapper and sampler objects can be used for repeated
-reproducible sampling, by passing the sampe bootstrapper or sampler
+reproducible sampling, by passing the same bootstrapper or sampler
 object as data to multiple ggplot2 layers.
 
 ``` r
@@ -54,20 +53,19 @@ data(BlueJays, package = "Stat2Data")
 
 # set up bootstrapping object that generates 20 bootstraps
 # and groups by variable `KnownSex`
-bs <- bootstrapper(20, KnownSex)
+bsr <- bootstrapper(20, KnownSex)
 
 ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
   geom_smooth(method = "lm", color = NA) +
   geom_point(alpha = 0.3) +
   # `.row` is a generated column providing a unique row number for all rows
-  geom_point(data = bs, aes(group = .row)) +
-  geom_smooth(data = bs, method = "lm", fullrange = TRUE, se = FALSE) +
+  geom_point(data = bsr, aes(group = .row)) +
+  geom_smooth(data = bsr, method = "lm", fullrange = TRUE, se = FALSE) +
   facet_wrap(~KnownSex, scales = "free_x") +
   scale_color_manual(values = c(F = "#D55E00", M = "#0072B2"), guide = "none") +
   theme_bw() +
   transition_states(.draw, 1, 1) + 
-  enter_fade() + 
-  exit_fade()
+  enter_fade() + exit_fade()
 ```
 
 ![](man/figures/README-bluejays-lm-anim-1.gif)<!-- -->
@@ -84,17 +82,20 @@ line.
 ``` r
 ggplot(mtcars, aes(hp, mpg)) + 
   geom_point() +
-  stat_smooth_draws(times = 20) + 
+  stat_smooth_draws(times = 20, aes(group = stat(.draw))) + 
   theme_bw() +
-  transition_states(stat(.draw), 1, 2)
+  transition_states(stat(.draw), 1, 2) +
+  enter_fade() + exit_fade()
 ```
 
 ![](man/figures/README-mtcars-smooth-anim-1.gif)<!-- -->
 
-## Confidence strips
+## Miscellaneous geoms and stats
 
-The ungeviz package provides a convenient way of drawing confidence
-strips, via `stat_confidence_density()`.
+Several geoms and stats are provided that can be helpful when
+visualizing uncertainty, including `geom_hpline()` and `geom_vpline()`
+used in the sampling example above, and `stat_confidence_density()`
+which can draw confidence strips.
 
 ``` r
 library(broom)
