@@ -59,7 +59,7 @@ ggplot(cacao_means, aes(x = estimate, y = location)) +
   theme_minimal()
 ```
 
-## Confidencde strips and confidence densities
+## Confidence strips and confidence densities
 
 Sometimes we may want to visualize the uncertainty distributions as colored bands that fade out (called confidence strips). Confidence strips can be generated with `stat_confidence_density()`. This stat takes as input a mean value (mapped to `x`), a margin of error (mapped to `moe`), and a confidence level corresponding to the margin of error (mapped to `confidence`). It uses these inputs to calculate the corresponding density function for a normal distribution, which it provides as new variable `stat(density)`. A `stat(ndensity)` is also provided, which is scaled so its maximum value is one. `stat_confidence_density()` automatically maps the normalized density to the `alpha` aesthetic, so that we can draw confidence strips simply by specifying a fill color.
 
@@ -75,7 +75,7 @@ ggplot(cacao_means, aes(x = estimate, y = location)) +
 There is one important caveat for `stat_confidence_density()`: It will generally not work for non-linear or transformed scales, because it uses the margin of error to fit a normal distribution and the moe is not modified by these scale transformation. I would recommend against using `stat_confidence_density()` with anything but a standard linear scale.
 
 
-```{r cacao-confidence-ridgeline}
+```{r cacao-confidence-ridgeline, message = FALSE}
 library(ggridges)
 
 ggplot(cacao_means, aes(x = estimate, y = location)) +
@@ -84,7 +84,7 @@ ggplot(cacao_means, aes(x = estimate, y = location)) +
     confidence = 0.68, fill = "#81A7D6", alpha = 0.8, scale = 0.08,
     min_height = 0.1
   ) +
-  geom_vpline(aes(x = estimate), size = 2, height = 0.5, color = "#D55E00") +
+  geom_vpline(aes(x = estimate), size = 1.5, height = 0.5, color = "#D55E00") +
   xlim(2.8, 3.6) + 
   theme_minimal()
 ```

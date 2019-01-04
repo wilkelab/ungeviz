@@ -45,7 +45,7 @@ When making a HOP animation, we don't need to set the `group` aesthetic, because
 library(gganimate)
 
 ggplot(mtcars, aes(disp, mpg)) +
-  #geom_point() +
+  geom_point() +
   stat_smooth_draws(size = 0.5) +
   theme_bw() +
   transition_states(stat(.draw), 1, 2)

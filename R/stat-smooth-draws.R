@@ -55,12 +55,12 @@
 #' library(gganimate)
 #'
 #' ggplot(mtcars, aes(hp, mpg)) +
-#'   #geom_point() +
+#'   geom_point() +
 #'   stat_smooth_draws(size = 0.5) +
 #'   transition_states(stat(.draw), 1, 2)
 #'
 #' ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
-#'   #geom_point() +
+#'   geom_point() +
 #'   stat_smooth_draws(formula = y ~ x, times = 20, size = 0.5) +
 #'   transition_states(stat(.draw), 1, 2)
 #' }
