@@ -1,0 +1,30 @@
+destination: docs
+
+reference:
+- title: Sampling and bootstrapping
+  desc: Reliable sampling from and bootstrapping of data frames
+  contents:
+  - bootstrapper
+  - sampler
+
+- title: Posterior draws
+  desc: Posterior draws of GAM fits
+  contents:
+  - stat_smooth_draws
+  - sample_outcomes
+  - confidence_band
+
+- title: Geoms
+  desc: Miscellaneous ggplot2 geoms
+  contents:
+  - starts_with("geom_")
+
+- title: Stats
+  desc: Miscellaneous ggplot2 stats
+  contents:
+  - starts_with("stat_")
+
+- title: Data sets
+  desc: Demo data sets provided with the package
+  contents:
+  - cacao

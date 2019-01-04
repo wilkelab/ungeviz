@@ -12,7 +12,8 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  fig.width = 4,
+  fig.width = 5,
+  fig.asp = 3/4,
   comment = "#>"
 )
 ```
@@ -36,7 +37,7 @@ Plines have a length and a thickness. The length is specified as `width` and `he
 
 Plines can be combined with error bars to show parameter estimates and their uncertainties in a regression model.
 
-```{r cacao-vpline}
+```{r cacao-vpline, fig.asp=1}
 library(dplyr)
 library(forcats)
 library(broom)
@@ -54,7 +55,7 @@ cacao_means <- lm(rating ~ location, data = cacao_lumped) %>%
 
 ggplot(cacao_means, aes(x = estimate, y = location)) +
   geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), height = 0.3) +
-  geom_vpline(aes(x = estimate), size = 2, height = 0.7, color = "#D55E00") +
+  geom_vpline(aes(x = estimate), size = 1.5, height = 0.7, color = "#D55E00") +
   xlim(2.8, 3.6) + 
   theme_minimal()
 ```
@@ -63,11 +64,11 @@ ggplot(cacao_means, aes(x = estimate, y = location)) +
 
 Sometimes we may want to visualize the uncertainty distributions as colored bands that fade out (called confidence strips). Confidence strips can be generated with `stat_confidence_density()`. This stat takes as input a mean value (mapped to `x`), a margin of error (mapped to `moe`), and a confidence level corresponding to the margin of error (mapped to `confidence`). It uses these inputs to calculate the corresponding density function for a normal distribution, which it provides as new variable `stat(density)`. A `stat(ndensity)` is also provided, which is scaled so its maximum value is one. `stat_confidence_density()` automatically maps the normalized density to the `alpha` aesthetic, so that we can draw confidence strips simply by specifying a fill color.
 
-```{r cacao-confidence-density}
+```{r cacao-confidence-density, fig.asp=1}
 ggplot(cacao_means, aes(x = estimate, y = location)) +
   stat_confidence_density(aes(moe = std.error), confidence = 0.68, fill = "#81A7D6", height = 0.7) +
   geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), height = 0.3) +
-  geom_vpline(aes(x = estimate), size = 2, height = 0.7, color = "#D55E00") +
+  geom_vpline(aes(x = estimate), size = 1.5, height = 0.7, color = "#D55E00") +
   xlim(2.8, 3.6) + 
   theme_minimal()
 ```
@@ -75,7 +76,7 @@ ggplot(cacao_means, aes(x = estimate, y = location)) +
 There is one important caveat for `stat_confidence_density()`: It will generally not work for non-linear or transformed scales, because it uses the margin of error to fit a normal distribution and the moe is not modified by these scale transformation. I would recommend against using `stat_confidence_density()` with anything but a standard linear scale.
 
 
-```{r cacao-confidence-ridgeline, message = FALSE}
+```{r cacao-confidence-ridgeline, message = FALSE, fig.asp=1}
 library(ggridges)
 
 ggplot(cacao_means, aes(x = estimate, y = location)) +
