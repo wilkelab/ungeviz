@@ -79,7 +79,7 @@ ggplot(BlueJays, aes(BillLength, Head, color = KnownSex)) +
 Instead of bootstrapping smoothers or regression lines, we can also fit a smoothing model to the data and then generate fit lines by randomly drawing from the posterior distribution. This strategy is automated in `stat_smooth_draws()`, which works similar to `stat_smooth()` but generates multiple equal probable fit draws rather than one best-fit line. 
 
 ```{r mtcars-smooth-anim}
-ggplot(mtcars, aes(mpg, hp)) + 
+ggplot(mtcars, aes(hp, mpg)) + 
   geom_point() +
   stat_smooth_draws(times = 20) + 
   theme_bw() +

@@ -51,6 +51,16 @@ ggplot(mtcars, aes(disp, mpg)) +
   transition_states(stat(.draw), 1, 2)
 ```
 
+By default, gganimate will deform one smooth line until it looks like the next one. We may prefer to have the lines fade in and out, however. We can achieve this effect by setting the `group` aesthetic of `stat_smooth_draws()` to `stat(.draw)`, so that gganimate sees the separate lines as distinct objects. We additionally add `enter_fade()` and `exit_fade()` to make the lines fade in and out.
+
+```{r mpg-smooth-draws-fade, eval = animate}
+ggplot(mtcars, aes(disp, mpg)) +
+  geom_point() +
+  stat_smooth_draws(size = 0.5, aes(group = stat(.draw))) +
+  theme_bw() +
+  transition_states(stat(.draw), 1, 2) +
+  enter_fade() + exit_fade()
+```
 
 The number of draws we generate is controlled by the `times` parameter of `stat_smooth_draws()`.
 

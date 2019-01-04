@@ -22,13 +22,15 @@ animate = FALSE
 animate = TRUE # uncomment to build animated plots
 ```
 
-The functions `sampler()` and `bootstrapper()` generate sampling and bootstrapping objects that are useful in ggplot2 layers. They are meant to sample from or bootstrap data frames.
+The functions `sampler()` and `bootstrapper()` generate sampling and bootstrapping objects that are useful in ggplot2 layers. They are meant to sample from data frames and/or bootstrap sample frames.
 
-As an introduction to their use, let's start by sampling three times two rows each (without replacement) from a data frame that holds one row for each letter in the alphabet.
+## Sampling from data frames
+
+As an introduction to the use of samplers and bootstrappers, let's start by sampling three times two rows each (without replacement) from a data frame that holds one row for each letter in the alphabet.
 ```{r}
 library(ungeviz)
 
-# sampling object that samples 3 times a sample size of 2
+# sampling object that samples 3 times a sample of size 2
 spl <- sampler(times = 3, size = 2)
 
 # input data frame
@@ -41,4 +43,118 @@ spl(df)
 # repeated application of the same sampler object produces the same sample
 spl(df)
 ```
+We see that repeated sampling produces the exact same output. We also see that the sampling adds three data columns, called `.draw`, `.id`, and `.row`. These provide information about the sampled rows. `.draw` identifies the repeated draws, `.id` identifies individual data row within each repeated draw, and `.row` simply counts all rows in the final data frame. All three of these additional columns can be useful in conjunction with gganimate.
 
+Sampling without replacement is the default. If we want to sample with replacement, we can set the `replace` argument to `TRUE`.
+```{r}
+# sampling object that samples once a sample of size 5 with replacement
+spl <- sampler(times = 1, size = 5, replace = TRUE)
+
+# input data frame
+df <- data.frame(letters = letters[1:4], number = 1:4)
+df
+
+# resample the data frame
+spl(df)
+```
+
+
+For both sampling and bootstrapping, we can specify groups to sample from or to bootstrap. This can be done either by using the `group` argument or by applying the sampler or bootstrapper object on a grouped tibble.
+
+```{r message = FALSE}
+library(dplyr)
+
+set.seed(1234)
+
+df <- data.frame(
+  type = c(rep("A", 100), rep("B", 10), rep("C", 3)),
+  y = rnorm(113)
+)
+head(df)
+
+# sample without considering any grouping
+sampler(2, 2, seed = 123)(df)
+
+# sample within groups defined by `type` column
+sampler(2, 2, group = type, seed = 123)(df)
+
+# sample within groups defined by `type` column
+group_by(df, type) %>% sampler(2, 2, seed = 123)()
+```
+
+Now let's make a HOP. We will use the `cacao` dataset, which contains ratings for chocolate bars from manufacturers in many different locations. Let's make a plot that shows the ratings of randomly drawn pairs of chocolate bars, one from a U.S. manufacturer and one from a Canadian manufacturer. The trick to doing this is to use the appropriate sampler object as the `data` argument to a layer in ggplot2. This trick makes use of the ggplot2 feature that if `data` is a function then this function is used to modify the main dataset of the plot for this layer.
+
+```{r cacao-ratings, eval = animate, fig.width=6, fig.asp = 1/2}
+library(ggplot2)
+library(gganimate)
+
+cacao %>% filter(location %in% c("Canada", "U.S.A.")) %>%
+  ggplot(aes(rating, location)) +
+  geom_point(
+    position = position_jitter(height = 0.3, width = 0.05), 
+    size = 0.4, color = "#0072B2", alpha = 1/2
+  ) +
+  geom_vpline(data = sampler(25, group = location), height = 0.6, color = "#D55E00") +
+  theme_bw() + 
+  transition_states(.draw, 1, 3)
+```
+
+By default, gganimate shows the vertical bars sliding from one position to another. If instead we want the bars to disappear and reappear, we need to tell gganimate that it should consider them to be different. We do this by setting the group aesthetic of the vpline layer to `.row`. Since `.row` simply counts all rows in the sampled data frame, this group setting guarantees that gganimate thinks of all vertical bars as independent objects.
+ 
+```{r cacao-ratings-fade, eval = animate, fig.width=6, fig.asp = 1/2}
+cacao %>% filter(location %in% c("Canada", "U.S.A.")) %>%
+  ggplot(aes(rating, location)) +
+  geom_point(
+    position = position_jitter(height = 0.3, width = 0.05), 
+    size = 0.4, color = "#0072B2", alpha = 1/2
+  ) +
+  geom_vpline(
+    data = sampler(25, group = location),
+    aes(group = .row), # here is where we set the group aesthetic for vertical bars
+    height = 0.6, color = "#D55E00"
+  ) +
+  theme_bw() + 
+  transition_states(.draw, 1, 3) +
+  enter_fade() + exit_fade() # smoth enter and exit
+```
+
+## Bootstrapping data frames
+
+Bootstrapper objects work just like sampler objects. A bootstrapper can be thought of as a special case of a sampler where sampling is done with replacement and the sample size is the group size.
+
+```{r}
+# bootstrapper object that bootstraps 2 times
+bsr <- bootstrapper(times = 2)
+
+# input data frame
+df <- data.frame(letters = letters[1:4], number = 1:4)
+head(df)
+
+# bootstrap the data frame
+bsr(df)
+```
+The columns `.draw`, `.id`, and `.row` are the same as generated by a sampler. The column `.original_id` represents the row id of the bootstrapped row in the original data frame, and the column `.copies` represents the number of times each original id appears in a bootstrapped draw.
+
+The `.copies` column is useful if we want to make a bootstrap demonstration that shows how often individual data points are oversampled. In this example, we use `geom_text()` to plot the copy number of each duplicated point. We also take advantage of the fact that a bootstrapper can be used multiple times with identical results, and hand it as the `data` argument to multiple layers.
+
+```{r bootstrap-demo, eval = animate, fig.width = 6, fig.asp = 3/4}
+set.seed(69527)
+
+# randomly generate dataset
+x <- rnorm(15)
+df <- data.frame(x, y = x + 0.5*rnorm(15))
+
+# bootstrapper object
+bsr <- bootstrapper(10)
+
+ggplot(df, aes(x, y)) +
+  geom_point(shape = 21, size = 6, fill = "white") +
+  geom_text(label = "0", hjust = 0.5, vjust = 0.5, size = 10/.pt) +
+  geom_point(data = bsr, aes(group = .row), shape = 21, size = 6, fill = "blue") +
+  geom_text(data = bsr, aes(label = .copies, group = .row), hjust = 0.5, vjust = 0.5, size = 10/.pt, color = "white") +
+  geom_smooth(data = bsr, aes(group = .draw), method = "lm", se = FALSE) +
+  ggtitle("Bootstrap demonstration") +
+  theme_bw() + 
+  transition_states(.draw, 1, 2) +
+  enter_fade() + exit_fade()
+```

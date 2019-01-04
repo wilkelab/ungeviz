@@ -82,7 +82,7 @@ generates multiple equal probable fit draws rather than one best-fit
 line.
 
 ``` r
-ggplot(mtcars, aes(mpg, hp)) + 
+ggplot(mtcars, aes(hp, mpg)) + 
   geom_point() +
   stat_smooth_draws(times = 20) + 
   theme_bw() +
