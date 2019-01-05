@@ -142,6 +142,42 @@ given margin of error.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>mapping</th>
+      <td><p>Set of aesthetic mappings created by <code>aes()</code> or
+<code>aes_()</code>. If specified and <code>inherit.aes = TRUE</code> (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>The data to be displayed in this layer. There are three
+options:</p>
+<p>If <code>NULL</code>, the default, the data is inherited from the plot
+data as specified in the call to <code>ggplot()</code>.</p>
+<p>A <code>data.frame</code>, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+<code>fortify()</code> for which variables will be created.</p>
+<p>A <code>function</code> will be called with a single argument,
+the plot data. The return value must be a <code>data.frame</code>, and
+will be used as the layer data.</p></td>
+    </tr>
+    <tr>
+      <th>geom</th>
+      <td><p>The geometric object to use display the data</p></td>
+    </tr>
+    <tr>
+      <th>position</th>
+      <td><p>Position adjustment, either as a string, or the result of
+a call to a position adjustment function.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed on to <code>layer()</code>. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+<code>colour = "red"</code> or <code>size = 3</code>. They may also be parameters
+to the paired geom/stat.</p></td>
+    </tr>
+    <tr>
       <th>confidence</th>
       <td><p>The confidence level used to calculate the <code>moe</code> statistic.
 This defaults to 0.95 (<code>moe</code> corresponds to 95% confidence interval).</p></td>
@@ -150,6 +186,30 @@ This defaults to 0.95 (<code>moe</code> corresponds to 95% confidence interval).
       <th>xlim</th>
       <td><p>Numeric vector of two numbers setting the range of x values to be
 covered by the confidence density. If not supplied, is taken from the x scale.</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Number of equally spaced points at which the density is calculated.</p></td>
+    </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>If <code>FALSE</code>, the default, missing values are removed with
+a warning. If <code>TRUE</code>, missing values are silently removed.</p></td>
+    </tr>
+    <tr>
+      <th>show.legend</th>
+      <td><p>logical. Should this layer be included in the legends?
+<code>NA</code>, the default, includes if any aesthetics are mapped.
+<code>FALSE</code> never includes, and <code>TRUE</code> always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.</p></td>
+    </tr>
+    <tr>
+      <th>inherit.aes</th>
+      <td><p>If <code>FALSE</code>, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. <code>borders()</code>.</p></td>
     </tr>
     </table>
     
@@ -171,50 +231,49 @@ This defaults to 0.95 (<code>moe</code> corresponds to 95% confidence interval).
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyverse</span>)</div><div class='output co'>#&gt; <span class='message'>── <span style='font-weight: bold;'>Attaching packages</span><span> ─────────────────────────────────────────────── tidyverse 1.2.1 ──</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>tibble </span><span> 1.4.2           </span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>purrr  </span><span> 0.2.5      </span>
-#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>tidyr  </span><span> 0.8.2           </span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>dplyr  </span><span> 0.7.99.</span><span style='color: #BB0000;'>9000</span><span></span>
-#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>readr  </span><span> 1.1.1           </span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>stringr</span><span> 1.3.1      </span>
-#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>tibble </span><span> 1.4.2           </span><span style='color: #00BB00;'>✔</span><span> </span><span style='color: #0000BB;'>forcats</span><span> 0.3.0      </span></div><div class='output co'>#&gt; <span class='message'>── </span><span style='font-weight: bold;'>Conflicts</span><span> ────────────────────────────────────────────────── tidyverse_conflicts() ──</span>
-#&gt; <span class='message'></span><span style='color: #BB0000;'>✖</span><span> </span><span style='color: #0000BB;'>dplyr</span><span>::</span><span style='color: #00BB00;'>collapse()</span><span> masks </span><span style='color: #0000BB;'>nlme</span><span>::collapse()</span>
-#&gt; <span class='message'></span><span style='color: #BB0000;'>✖</span><span> </span><span style='color: #0000BB;'>dplyr</span><span>::</span><span style='color: #00BB00;'>filter()</span><span>   masks </span><span style='color: #0000BB;'>stats</span><span>::filter()</span>
-#&gt; <span class='message'></span><span style='color: #BB0000;'>✖</span><span> </span><span style='color: #0000BB;'>dplyr</span><span>::</span><span style='color: #00BB00;'>lag()</span><span>      masks </span><span style='color: #0000BB;'>stats</span><span>::lag()</span></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
+
 <span class='no'>cacao_small</span> <span class='kw'>&lt;-</span> <span class='no'>cacao</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/filter'>filter</a></span>(<span class='no'>location</span> <span class='kw'>%in%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Switzerland"</span>, <span class='st'>"Canada"</span>, <span class='st'>"U.S.A."</span>, <span class='st'>"Belgium"</span>))
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>location</span> <span class='kw'>%in%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Switzerland"</span>, <span class='st'>"Canada"</span>, <span class='st'>"U.S.A."</span>, <span class='st'>"Belgium"</span>))
 
 <span class='no'>cacao_summary</span> <span class='kw'>&lt;-</span> <span class='no'>cacao_small</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>group_by</span>(<span class='no'>location</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>summarize</span>(
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>location</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span>(
     <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/sd'>sd</a></span>(<span class='no'>rating</span>),
     <span class='kw'>moe</span> <span class='kw'>=</span> <span class='no'>sd</span>*<span class='fl'>1.96</span>,
     <span class='kw'>rating</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>rating</span>)
   )
 
-<span class='fu'>ggplot</span>(<span class='no'>cacao_summary</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rating</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>location</span>)) +
-  <span class='fu'>stat_confidence_density</span>(<span class='fu'>aes</span>(<span class='kw'>moe</span> <span class='kw'>=</span> <span class='no'>moe</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'>stat</span>(<span class='no'>ndensity</span>)), <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>0.8</span>) +
-  <span class='fu'>geom_point</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>cacao_small</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='fu'>position_jitter</span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.05</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>0.3</span>) +
-  <span class='fu'>geom_errorbarh</span>(<span class='fu'>aes</span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>rating</span> - <span class='no'>sd</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>rating</span> + <span class='no'>sd</span>), <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1</span>) +
-  <span class='fu'>geom_point</span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>) +
-  <span class='fu'>theme_minimal</span>()</div><div class='img'><img src='stat_confidence_density-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>cacao_summary</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rating</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>location</span>)) +
+  <span class='fu'>stat_confidence_density</span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>moe</span> <span class='kw'>=</span> <span class='no'>moe</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/stat.html'>stat</a></span>(<span class='no'>ndensity</span>)), <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>0.8</span>) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>cacao_small</span>, <span class='kw'>position</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/position_jitter.html'>position_jitter</a></span>(<span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>0.05</span>), <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>0.3</span>) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_errorbarh.html'>geom_errorbarh</a></span>(
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>rating</span> - <span class='no'>sd</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>rating</span> + <span class='no'>sd</span>),
+    <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1</span>
+  ) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_minimal</a></span>()</div><div class='img'><img src='stat_confidence_density-1.png' alt='' width='700' height='433' /></div><div class='input'>
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggridges</span>)</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘ggridges’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:ggplot2’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    scale_discrete_manual</span></div><div class='input'>
 <span class='no'>cacao_se</span> <span class='kw'>&lt;-</span> <span class='no'>cacao_small</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>group_by</span>(<span class='no'>location</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>summarize</span>(
-    <span class='kw'>se</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/sd'>sd</a></span>(<span class='no'>rating</span>)/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>sqrt</a></span>(<span class='fu'>n</span>()),
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>location</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span>(
+    <span class='kw'>se</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/sd'>sd</a></span>(<span class='no'>rating</span>)/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>sqrt</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/n.html'>n</a></span>()),
     <span class='kw'>moe</span> <span class='kw'>=</span> <span class='no'>se</span>*<span class='fl'>1.96</span>,
     <span class='kw'>rating</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>rating</span>)
   )
 
-<span class='fu'>ggplot</span>(<span class='no'>cacao_se</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rating</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>location</span>)) +
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>cacao_se</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>rating</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>location</span>)) +
   <span class='fu'>stat_confidence_density</span>(
     <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"ridgeline"</span>,
-    <span class='fu'>aes</span>(<span class='kw'>moe</span> <span class='kw'>=</span> <span class='no'>moe</span>, <span class='kw'>height</span> <span class='kw'>=</span> <span class='fu'>stat</span>(<span class='no'>density</span>)),
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>moe</span> <span class='kw'>=</span> <span class='no'>moe</span>, <span class='kw'>height</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/stat.html'>stat</a></span>(<span class='no'>density</span>)),
     <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2.5</span>, <span class='fl'>3.75</span>), <span class='kw'>scale</span> <span class='kw'>=</span> <span class='fl'>0.08</span>
   ) +
-  <span class='fu'>theme_minimal</span>()</div><div class='img'><img src='stat_confidence_density-2.png' alt='' width='700' height='433' /></div></span></pre>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_minimal</a></span>()</div><div class='img'><img src='stat_confidence_density-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -129,7 +129,8 @@
     </div>
 
     <pre class="usage"><span class='fu'>sampler</span>(<span class='no'>times</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>".draw"</span>, <span class='kw'>row</span> <span class='kw'>=</span> <span class='st'>".row"</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>".id"</span>)</pre>
+  <span class='kw'>seed</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>".draw"</span>, <span class='kw'>row</span> <span class='kw'>=</span> <span class='st'>".row"</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='st'>".id"</span>,
+  <span class='kw'>original_id</span> <span class='kw'>=</span> <span class='st'>".original_id"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,6 +173,11 @@ animations with gganimate.</p></td>
 running from 1 to n for each bootstrap, where n is the number
 of observations in each group.</p></td>
     </tr>
+    <tr>
+      <th>original_id</th>
+      <td><p>Name (as character) of the column that indicates the
+row from which the sampled row originates.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -181,14 +187,18 @@ of observations in each group.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>spl</span> <span class='kw'>&lt;-</span> <span class='fu'>sampler</span>(<span class='fl'>3</span>, <span class='fl'>2</span>)
-<span class='fu'>spl</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>letter</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>4</span>]))</div><div class='output co'>#&gt;   letter .draw .id .row
-#&gt; 1      c     1   1    1
-#&gt; 2      d     1   2    2
-#&gt; 3      a     2   1    3
-#&gt; 4      d     2   2    4
-#&gt; 5      a     3   1    5
-#&gt; 6      b     3   2    6</div><div class='input'>
+<span class='fu'>spl</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>letter</span> <span class='kw'>=</span> <span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>4</span>]))</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 5</span><span>
+#&gt; </span><span style='color: #555555;'># Groups:   .draw [3]</span><span>
+#&gt;   .draw   .id .original_id letter  .row
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>     1     1            3 c          1
+#&gt; </span><span style='color: #555555;'>2</span><span>     1     2            4 d          2
+#&gt; </span><span style='color: #555555;'>3</span><span>     2     1            1 a          3
+#&gt; </span><span style='color: #555555;'>4</span><span>     2     2            4 d          4
+#&gt; </span><span style='color: #555555;'>5</span><span>     3     1            1 a          5
+#&gt; </span><span style='color: #555555;'>6</span><span>     3     2            2 b          6</div><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>iris</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>Sepal.Length</span>, <span class='no'>Sepal.Width</span>)) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>Species</span>), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.3</span>) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(
@@ -208,17 +218,26 @@ of observations in each group.</p></td>
 <span class='co'># incorrect: sampling ungrouped dataset leads to missing data</span>
 <span class='co'># in some categories</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>type</span>, <span class='no'>y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>sampler</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>559</span>), <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"summary"</span>) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange</a></span>(
+    <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>sampler</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>559</span>),
+    <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"summary"</span>
+  ) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>.draw</span>)</div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 4 rows containing missing values (geom_pointrange).</span></div><div class='img'><img src='sampler-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># correct: sampling within groups</span>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>df</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>type</span>, <span class='no'>y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>sampler</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>type</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>559</span>), <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"summary"</span>) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange</a></span>(
+    <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>sampler</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>type</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>559</span>),
+    <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"summary"</span>
+  ) +
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>.draw</span>)</div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='img'><img src='sampler-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># also correct: use grouped data frame</span>
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'>group_by</span>(<span class='no'>df</span>, <span class='no'>type</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>type</span>, <span class='no'>y</span>)) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>sampler</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>559</span>), <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"summary"</span>) +
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>.draw</span>)</div><div class='output co'>#&gt; <span class='error'>Error in group_by(df, type): could not find function "group_by"</span></div><div class='input'>
-</div><span class='co'># NOT RUN {</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>df</span>, <span class='no'>type</span>), <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>type</span>, <span class='no'>y</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_linerange.html'>geom_pointrange</a></span>(
+    <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>sampler</span>(<span class='fl'>6</span>, <span class='fl'>3</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>559</span>),
+    <span class='kw'>stat</span> <span class='kw'>=</span> <span class='st'>"summary"</span>
+  ) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>.draw</span>)</div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='output co'>#&gt; <span class='message'>No summary function supplied, defaulting to `mean_se()</span></div><div class='img'><img src='sampler-4.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></span><span class='co'># NOT RUN {</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>gganimate</span>)
 
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>iris</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='no'>Sepal.Length</span>, <span class='no'>Species</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>Species</span>)) +

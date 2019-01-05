@@ -26,7 +26,9 @@ bootstrapping objects, respectively, that can be used in place of data
 in ggplot2 layers. These objects are helpful when creating HOPs.
 
 ``` r
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(forcats)
 library(ungeviz)
 library(gganimate)
 
@@ -76,7 +78,7 @@ Instead of bootstrapping smoothers or regression lines, we can also fit
 a smoothing model to the data and then generate fit lines by randomly
 drawing from the posterior distribution. This strategy is automated in
 `stat_smooth_draws()`, which works similar to `stat_smooth()` but
-generates multiple equal probable fit draws rather than one best-fit
+generates multiple equally probable fit draws rather than one best-fit
 line.
 
 ``` r

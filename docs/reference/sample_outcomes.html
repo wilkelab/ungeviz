@@ -138,13 +138,13 @@ fitted with <code><a href='https://www.rdocumentation.org/packages/mgcv/topics/g
 
 <span class='co'># S3 method for gam</span>
 <span class='fu'>sample_outcomes</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fl'>20</span>,
-  <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>".draw"</span>, <span class='kw'>unconditional</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>".draw"</span>, <span class='kw'>unconditional</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='fu'>confidence_band</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for gam</span>
 <span class='fu'>confidence_band</span>(<span class='no'>model</span>, <span class='no'>newdata</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>unconditional</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>unconditional</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,6 +170,10 @@ which outcomes or confidence values should be calculated, as in
 separate outcome draws. Default is <code>.draw</code>.</p></td>
     </tr>
     <tr>
+      <th>...</th>
+      <td><p>Other arguments.</p></td>
+    </tr>
+    <tr>
       <th>unconditional</th>
       <td><p>Bool indicating whether the smoothing parameter uncertainty
 corrected covariance matrix is used (<code>TRUE</code>) or not (<code>FALSE</code>, the default), as in
@@ -184,7 +188,10 @@ gam model to be fit by REML (<code>method = "REML"</code> in the <code>gam()</co
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>mgcv</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: nlme</span></div><div class='output co'>#&gt; <span class='message'>This is mgcv 1.8-24. For overview type 'help("mgcv-package")'.</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>mgcv</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: nlme</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘nlme’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:dplyr’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    collapse</span></div><div class='output co'>#&gt; <span class='message'>This is mgcv 1.8-24. For overview type 'help("mgcv-package")'.</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
 
 <span class='co'># gam spline fit</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/mgcv/topics/gam'>gam</a></span>(<span class='no'>mpg</span> ~ <span class='fu'><a href='https://www.rdocumentation.org/packages/mgcv/topics/s'>s</a></span>(<span class='no'>disp</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>mtcars</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"REML"</span>)

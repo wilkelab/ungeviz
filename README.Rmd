@@ -35,8 +35,9 @@ The `sampler()` and `bootstrapper()` functions generate sampling and bootstrappi
 objects, respectively, that can be used in place of data in ggplot2 layers. These objects are helpful when creating HOPs.
 
 ```{r cacao-samples-anim, message = FALSE, warning = FALSE, fig.asp = 0.5}
-library(ggplot)
+library(ggplot2)
 library(dplyr)
+library(forcats)
 library(ungeviz)
 library(gganimate)
 

@@ -86,7 +86,7 @@
       <h1>Supporting geoms and stats</h1>
                         <h4 class="author">Claus O. Wilke</h4>
             
-            <h4 class="date">2019-01-04</h4>
+            <h4 class="date">2019-01-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/wilkelab/ungeviz/blob/master/vignettes/supporting-geoms-stats.Rmd"><code>vignettes/supporting-geoms-stats.Rmd</code></a></small>
       <div class="hidden name"><code>supporting-geoms-stats.Rmd</code></div>
@@ -110,33 +110,25 @@
 <p>Plines have a length and a thickness. The length is specified as <code>width</code> and <code>height</code>, respectively, for the horizontal and vertical variants. The thickness is always specified as <code>size</code>. Note that <code>width</code> and <code>height</code> specify the total length of the pline, whereas the equally named parameters in <code><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter()</a></code> specify only the linear extent in one direction. Therefore, in the above example, we use <code>width = 0.3</code> for <code><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter()</a></code> and <code>width = 0.6</code> for <code><a href="../reference/geom_hpline.html">geom_hpline()</a></code>.</p>
 <p>Plines can be combined with error bars to show parameter estimates and their uncertainties in a regression model.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt; Attaching package: 'dplyr'</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; The following objects are masked from 'package:stats':</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;     filter, lag</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; The following objects are masked from 'package:base':</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt;     intersect, setdiff, setequal, union</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(forcats)</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(broom)</a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(emmeans)</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">cacao_lumped &lt;-<span class="st"> </span>cacao <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">    <span class="dt">location =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/forcats/topics/fct_lump">fct_lump</a></span>(location, <span class="dt">n =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb2-17" data-line-number="17">  )</a>
-<a class="sourceLine" id="cb2-18" data-line-number="18">  </a>
-<a class="sourceLine" id="cb2-19" data-line-number="19">cacao_means &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/lm">lm</a></span>(rating <span class="op">~</span><span class="st"> </span>location, <span class="dt">data =</span> cacao_lumped) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans</a></span>(<span class="st">"location"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/broom/topics/reexports">tidy</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/forcats/topics/fct_reorder">fct_reorder</a></span>(location, estimate))</a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(cacao_means, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> location)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_errorbarh.html">geom_errorbarh</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">xmin =</span> estimate <span class="op">-</span><span class="st"> </span>std.error, <span class="dt">xmax =</span> estimate <span class="op">+</span><span class="st"> </span>std.error), <span class="dt">height =</span> <span class="fl">0.3</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="st">  </span><span class="kw"><a href="../reference/geom_hpline.html">geom_vpline</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> estimate), <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">height =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">"#D55E00"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="fl">2.8</span>, <span class="fl">3.6</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(forcats)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(broom)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(emmeans)</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">cacao_lumped &lt;-<span class="st"> </span>cacao <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    <span class="dt">location =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/forcats/topics/fct_lump">fct_lump</a></span>(location, <span class="dt">n =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">  )</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  </a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">cacao_means &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/lm">lm</a></span>(rating <span class="op">~</span><span class="st"> </span>location, <span class="dt">data =</span> cacao_lumped) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans</a></span>(<span class="st">"location"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/broom/topics/reexports">tidy</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/forcats/topics/fct_reorder">fct_reorder</a></span>(location, estimate))</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(cacao_means, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> location)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_errorbarh.html">geom_errorbarh</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">xmin =</span> estimate <span class="op">-</span><span class="st"> </span>std.error, <span class="dt">xmax =</span> estimate <span class="op">+</span><span class="st"> </span>std.error), <span class="dt">height =</span> <span class="fl">0.3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="st">  </span><span class="kw"><a href="../reference/geom_hpline.html">geom_vpline</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> estimate), <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">height =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">"#D55E00"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span>(<span class="fl">2.8</span>, <span class="fl">3.6</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span>()</a></code></pre></div>
 <p><img src="supporting-geoms-stats_files/figure-html/cacao-vpline-1.png" width="480"></p>
 </div>
 <div id="confidence-strips-and-confidence-densities" class="section level2">
@@ -151,6 +143,7 @@
 <a class="sourceLine" id="cb3-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span>()</a></code></pre></div>
 <p><img src="supporting-geoms-stats_files/figure-html/cacao-confidence-density-1.png" width="480"></p>
 <p>There is one important caveat for <code><a href="../reference/stat_confidence_density.html">stat_confidence_density()</a></code>: It will generally not work for non-linear or transformed scales, because it uses the margin of error to fit a normal distribution and the moe is not modified by these scale transformation. I would recommend against using <code><a href="../reference/stat_confidence_density.html">stat_confidence_density()</a></code> with anything but a standard linear scale.</p>
+<p>We can combine <code><a href="../reference/stat_confidence_density.html">stat_confidence_density()</a></code> also with other geoms. For example, we can draw the confidence distributions as ridgelines.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggridges)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(cacao_means, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> location)) <span class="op">+</span></a>
