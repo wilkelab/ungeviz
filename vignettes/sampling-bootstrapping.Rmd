@@ -35,7 +35,7 @@ library(ungeviz)
 spl <- sampler(times = 3, size = 2)
 
 # input data frame
-df <- data.frame(letters = letters, number = 1:26)
+df <- data.frame(letter = letters, number = 1:26)
 head(df)
 
 # resample the data frame
@@ -52,7 +52,7 @@ Sampling without replacement is the default. If we want to sample with replaceme
 spl <- sampler(times = 1, size = 5, replace = TRUE)
 
 # input data frame
-df <- data.frame(letters = letters[1:4], number = 1:4)
+df <- data.frame(letter = letters[1:4], number = 1:4)
 df
 
 # resample the data frame
@@ -128,7 +128,7 @@ Bootstrapper objects work just like sampler objects. A bootstrapper can be thoug
 bsr <- bootstrapper(times = 2)
 
 # input data frame
-df <- data.frame(letters = letters[1:4], number = 1:4)
+df <- data.frame(letter = letters[1:4], number = 1:4)
 head(df)
 
 # bootstrap the data frame
