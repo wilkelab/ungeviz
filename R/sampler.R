@@ -14,6 +14,8 @@
 #' @param id Name (as character) of the column that will hold an integer
 #'   running from 1 to n for each bootstrap, where n is the number
 #'   of observations in each group.
+#' @param original_id Name (as character) of the column that indicates the
+#'   row from which the sampled row originates.
 #' @seealso
 #' [`bootstrapper()`]
 #' @examples
@@ -68,12 +70,14 @@
 #' }
 #' @export
 sampler <- function(times, size = 1, replace = FALSE, group = NULL, seed = NULL,
-                    key = ".draw", row = ".row", id = ".id") {
+                    key = ".draw", row = ".row", id = ".id", original_id = ".original_id") {
   force(times)
   force(size)
   force(replace)
   force(key)
+  force(row)
   force(id)
+  force(original_id)
   group <- enquo(group)
 
   if (is.null(seed)) {
@@ -105,10 +109,11 @@ sampler <- function(times, size = 1, replace = FALSE, group = NULL, seed = NULL,
         }
 
         .data %>%
-          do(sampling_fun(.)) %>%
+#          do(sampling_fun(.)) %>%
 #          # would want to replace the `do` line with something like the following:
-#          samplify(times, size = size, replace = replace, key = !!key) %>%
-#          collect(id = id, original_id = original_id) %>%
+          samplify(times = times, size = size, replace = replace, key = key) %>%
+          #collect(id = id) %>%
+          collect(id = id, original_id = original_id) %>%
           mutate(
             !!row := 1
           ) -> out

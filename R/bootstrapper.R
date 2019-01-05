@@ -12,8 +12,8 @@
 #' @param id Name (as character) of the column that will hold an integer
 #'   running from 1 to n for each bootstrap, where n is the number
 #'   of observations in each group.
-#' @param original_id Name (as character) of the column that indicate the
-#'   original row that the bootstrapped row came from.
+#' @param original_id Name (as character) of the column that indicates the
+#'   row from which the bootstrapped row originates.
 #' @param copies Name (as character) of the column that reports how often
 #'   a specific original row has been oversampled.
 #' @seealso
@@ -80,6 +80,11 @@
 bootstrapper <- function(times, group = NULL, seed = NULL, key = ".draw", row = ".row",
                          id = ".id", original_id = ".original_id", copies = ".copies") {
   force(times)
+  force(key)
+  force(row)
+  force(id)
+  force(original_id)
+  force(copies)
   group <- enquo(group)
 
   if (is.null(seed)) {
@@ -103,7 +108,7 @@ bootstrapper <- function(times, group = NULL, seed = NULL, key = ".draw", row = 
         }
 
         .data %>%
-          bootstrapify(times, key = !!key) %>%
+          bootstrapify(times = times, key = key) %>%
           collect(id = id, original_id = original_id) %>%
           mutate(
             !!copies := count_copies(!!as.symbol(original_id)),

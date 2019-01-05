@@ -37,7 +37,7 @@ Plines have a length and a thickness. The length is specified as `width` and `he
 
 Plines can be combined with error bars to show parameter estimates and their uncertainties in a regression model.
 
-```{r cacao-vpline, fig.asp=1}
+```{r cacao-vpline, message=FALSE, fig.asp=1}
 library(dplyr)
 library(forcats)
 library(broom)
@@ -75,7 +75,7 @@ ggplot(cacao_means, aes(x = estimate, y = location)) +
 
 There is one important caveat for `stat_confidence_density()`: It will generally not work for non-linear or transformed scales, because it uses the margin of error to fit a normal distribution and the moe is not modified by these scale transformation. I would recommend against using `stat_confidence_density()` with anything but a standard linear scale.
 
-
+We can combine `stat_confidence_density()` also with other geoms. For example, we can draw the confidence distributions as ridgelines.
 ```{r cacao-confidence-ridgeline, message = FALSE, fig.asp=1}
 library(ggridges)
 
