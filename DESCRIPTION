@@ -13,18 +13,22 @@ Imports:
     ggplot2,
     dplyr (>= 0.7.99.9000),
     mvtnorm,
+    mgcv,
     purrr,
     strapgod,
     tidyr,
     tibble,
     rlang,
     withr
-License: GPL-2 | file LICENSE
+License: GPL-2
 LazyData: true
 Suggests:
     cowplot,
     broom,
     emmeans,
+    forcats,
+    gganimate,
+    transformr,
     ggridges,
     glue,
     knitr,

@@ -23,6 +23,7 @@
 #' spl(data.frame(letter = letters[1:4]))
 #'
 #' library(ggplot2)
+#' library(dplyr)
 #' ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
 #'   geom_point(aes(color = Species), alpha = 0.3) +
 #'   geom_point(
@@ -43,17 +44,26 @@
 #' # incorrect: sampling ungrouped dataset leads to missing data
 #' # in some categories
 #' ggplot(df, aes(type, y)) +
-#'   geom_pointrange(data = sampler(6, 3, replace = TRUE, seed = 559), stat = "summary") +
+#'   geom_pointrange(
+#'     data = sampler(6, 3, replace = TRUE, seed = 559),
+#'     stat = "summary"
+#'   ) +
 #'   facet_wrap(~.draw)
 #'
 #' # correct: sampling within groups
 #' ggplot(df, aes(type, y)) +
-#'   geom_pointrange(data = sampler(6, 3, replace = TRUE, group = type, seed = 559), stat = "summary") +
+#'   geom_pointrange(
+#'     data = sampler(6, 3, replace = TRUE, group = type, seed = 559),
+#'     stat = "summary"
+#'   ) +
 #'   facet_wrap(~.draw)
 #'
 #' # also correct: use grouped data frame
 #' ggplot(group_by(df, type), aes(type, y)) +
-#'   geom_pointrange(data = sampler(6, 3, replace = TRUE, seed = 559), stat = "summary") +
+#'   geom_pointrange(
+#'     data = sampler(6, 3, replace = TRUE, seed = 559),
+#'     stat = "summary"
+#'   ) +
 #'   facet_wrap(~.draw)
 #'
 #' \dontrun{
@@ -83,19 +93,7 @@ sampler <- function(times, size = 1, replace = FALSE, group = NULL, seed = NULL,
   if (is.null(seed)) {
     seed <- sample(2^31-1, 1)
   }
-
-  sampling_fun <- function(x) {
-    map_dfr(
-      1:times,
-      ~{sample_n(x, size, replace = replace) %>%
-          mutate(
-            !!key := .x,
-            !!id := as.integer(1:size)
-          )
-      }
-    )
-  }
-
+  .draw_group <- NULL # to keep CRAN check happy
 
   function(.data) {
     with_seed(
@@ -109,10 +107,7 @@ sampler <- function(times, size = 1, replace = FALSE, group = NULL, seed = NULL,
         }
 
         .data %>%
-#          do(sampling_fun(.)) %>%
-#          # would want to replace the `do` line with something like the following:
           samplify(times = times, size = size, replace = replace, key = key) %>%
-          #collect(id = id) %>%
           collect(id = id, original_id = original_id) %>%
           mutate(
             !!row := 1

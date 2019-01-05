@@ -71,6 +71,7 @@ to set the length of the line segment. All other aesthetics (\code{colour}, \cod
 \code{linetype}, etc.) are inherited from \code{\link[=geom_segment]{geom_segment()}}.
 }
 \examples{
+library(ggplot2)
 ggplot(iris, aes(Species, Sepal.Length)) +
   geom_hpline(stat = "summary")
 

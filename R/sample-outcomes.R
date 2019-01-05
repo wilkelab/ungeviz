@@ -14,6 +14,7 @@
 #' @param key Character vector holding the name of the column indicating
 #'   separate outcome draws. Default is `.draw`.
 #' @param level Confidence level. Default is 95\%.
+#' @param ... Other arguments.
 #' @export
 sample_outcomes <- function(model, newdata, times = 20, key = ".draw", ...) {
   UseMethod("sample_outcomes", model)
@@ -109,14 +110,14 @@ sample_outcomes.default <- function(model, ...) {
 #'     legend.title.align = 0.5
 #'   )
 #' @export
-sample_outcomes.gam <- function(model, newdata, times = 20, key = ".draw", unconditional = FALSE) {
+sample_outcomes.gam <- function(model, newdata, times = 20, key = ".draw", unconditional = FALSE, ...) {
   # based on original code concept by Noam Ross
   # https://gist.github.com/noamross/8bf1fc5b2f629b3a7e1eb6b4572e8388
   response <- rlang::expr_name(attr(model$terms, "variables")[[2]])
   key <- enquo(key)
 
   # Get the linear prediction matrix
-  pred_mat <- predict(
+  pred_mat <- stats::predict(
     model,
     newdata = newdata,
     type = "lpmatrix",
@@ -124,12 +125,12 @@ sample_outcomes.gam <- function(model, newdata, times = 20, key = ".draw", uncon
   )
 
   # Get the variance-covariance matrix of coefficients
-  vcov_mat <- vcov(model, unconditional = unconditional)
+  vcov_mat <- stats::vcov(model, unconditional = unconditional)
 
   # Draw 20 samples from the posterior and make predictions from them
-  coefs <- mvtnorm::rmvnorm(times, mean = coef(model), sigma = vcov_mat)
+  coefs <- mvtnorm::rmvnorm(times, mean = stats::coef(model), sigma = vcov_mat)
   linpred <- pred_mat %*% t(coefs) # linear predictor
-  preds <- family(model)$linkinv(linpred) # response
+  preds <- stats::family(model)$linkinv(linpred) # response
   pred_df <- as_tibble(preds) %>%
     set_names(as.character(1:times)) %>%
     cbind(newdata) %>%
@@ -155,7 +156,7 @@ confidence_band.default <- function(model, ...) {
 
 #' @rdname sample_outcomes
 #' @export
-confidence_band.gam <- function(model, newdata, level = 0.95, unconditional = FALSE) {
+confidence_band.gam <- function(model, newdata, level = 0.95, unconditional = FALSE, ...) {
   # original code concept: Noam Ross
   # https://gist.github.com/noamross/8bf1fc5b2f629b3a7e1eb6b4572e8388
   response <- as.symbol(rlang::expr_name(attr(model$terms, "variables")[[2]]))
@@ -163,8 +164,11 @@ confidence_band.gam <- function(model, newdata, level = 0.95, unconditional = FA
   # normal quantile corresponding to confidence level
   std <- stats::qnorm(level / 2 + 0.5)
 
+  # to keep CRAN check happy
+  fit <- se.fit <- lo <- hi <- NULL
+
   # predict confidence band
-  predict(
+  stats::predict(
     model,
     newdata = newdata,
     se.fit = TRUE,
@@ -178,8 +182,8 @@ confidence_band.gam <- function(model, newdata, level = 0.95, unconditional = FA
       hi = !!response + std*se.fit
     ) %>%
     mutate( # response
-      !!response := family(model)$linkinv(!!response),
-      lo = family(model)$linkinv(lo),
-      hi = family(model)$linkinv(hi)
+      !!response := stats::family(model)$linkinv(!!response),
+      lo = stats::family(model)$linkinv(lo),
+      hi = stats::family(model)$linkinv(hi)
     )
 }

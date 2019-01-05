@@ -5,10 +5,18 @@
 #' the confidence density that underlies a given parameter estimate with
 #' given margin of error.
 #'
+#' @inheritParams ggplot2::layer
+#' @param ... Other arguments passed on to [`layer()`]. These are
+#'   often aesthetics, used to set an aesthetic to a fixed value, like
+#'   `colour = "red"` or `size = 3`. They may also be parameters
+#'   to the paired geom/stat.
 #' @param confidence The confidence level used to calculate the `moe` statistic.
 #'    This defaults to 0.95 (`moe` corresponds to 95\% confidence interval).
 #' @param xlim Numeric vector of two numbers setting the range of x values to be
 #'   covered by the confidence density. If not supplied, is taken from the x scale.
+#' @param n Number of equally spaced points at which the density is calculated.
+#' @param na.rm If `FALSE`, the default, missing values are removed with
+#'   a warning. If `TRUE`, missing values are silently removed.
 #'
 #' @section Details:
 #'
@@ -23,7 +31,8 @@
 #' Adrian W. Bowman. Graphs for Uncertainty. J. R. Statist. Soc. A 182:1-16, 2018.
 #' \url{http://www.rss.org.uk/Images/PDF/events/2018/Bowman-5-Sept-2018.pdf}
 #' @examples
-#' library(tidyverse)
+#' library(ggplot2)
+#' library(dplyr)
 #'
 #' cacao_small <- cacao %>%
 #'   filter(location %in% c("Switzerland", "Canada", "U.S.A.", "Belgium"))
@@ -39,7 +48,10 @@
 #' ggplot(cacao_summary, aes(x = rating, y = location)) +
 #'   stat_confidence_density(aes(moe = moe, fill = stat(ndensity)), height = 0.8) +
 #'   geom_point(data = cacao_small, position = position_jitter(width = 0.05), size = 0.3) +
-#'   geom_errorbarh(aes(xmin = rating - sd, xmax = rating + sd), height = 0.3, color = "darkred", size = 1) +
+#'   geom_errorbarh(
+#'     aes(xmin = rating - sd, xmax = rating + sd),
+#'     height = 0.3, color = "darkred", size = 1
+#'   ) +
 #'   geom_point(size = 3, color = "darkred") +
 #'   theme_minimal()
 #'
@@ -143,5 +155,5 @@ StatConfidenceDensity <- ggproto("StatConfidenceDensity", Stat,
 fit_normal <- function(x, moe, confidence) {
   # convert to two-tailed value
   confidence <- 1-(1-confidence)/2
-  function(z) dnorm(z, mean = x, sd = moe/qnorm(confidence))
+  function(z) stats::dnorm(z, mean = x, sd = moe/stats::qnorm(confidence))
 }

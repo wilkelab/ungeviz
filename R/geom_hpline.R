@@ -9,6 +9,7 @@
 #' `linetype`, etc.) are inherited from [`geom_segment()`].
 #' @inheritParams ggplot2::geom_point
 #' @examples
+#' library(ggplot2)
 #' ggplot(iris, aes(Species, Sepal.Length)) +
 #'   geom_hpline(stat = "summary")
 #'

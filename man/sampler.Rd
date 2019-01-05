@@ -5,7 +5,8 @@
 \title{Create a sampler function useful for repeated reproducible sampling}
 \usage{
 sampler(times, size = 1, replace = FALSE, group = NULL,
-  seed = NULL, key = ".draw", row = ".row", id = ".id")
+  seed = NULL, key = ".draw", row = ".row", id = ".id",
+  original_id = ".original_id")
 }
 \arguments{
 \item{times}{Number of independent sampling draws to perform.}
@@ -29,6 +30,9 @@ animations with gganimate.}
 \item{id}{Name (as character) of the column that will hold an integer
 running from 1 to n for each bootstrap, where n is the number
 of observations in each group.}
+
+\item{original_id}{Name (as character) of the column that indicates the
+row from which the sampled row originates.}
 }
 \description{
 Create a sampler function useful for repeated reproducible sampling
@@ -38,6 +42,7 @@ spl <- sampler(3, 2)
 spl(data.frame(letter = letters[1:4]))
 
 library(ggplot2)
+library(dplyr)
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
   geom_point(aes(color = Species), alpha = 0.3) +
   geom_point(
@@ -58,17 +63,26 @@ df <- data.frame(
 # incorrect: sampling ungrouped dataset leads to missing data
 # in some categories
 ggplot(df, aes(type, y)) +
-  geom_pointrange(data = sampler(6, 3, replace = TRUE, seed = 559), stat = "summary") +
+  geom_pointrange(
+    data = sampler(6, 3, replace = TRUE, seed = 559),
+    stat = "summary"
+  ) +
   facet_wrap(~.draw)
 
 # correct: sampling within groups
 ggplot(df, aes(type, y)) +
-  geom_pointrange(data = sampler(6, 3, replace = TRUE, group = type, seed = 559), stat = "summary") +
+  geom_pointrange(
+    data = sampler(6, 3, replace = TRUE, group = type, seed = 559),
+    stat = "summary"
+  ) +
   facet_wrap(~.draw)
 
 # also correct: use grouped data frame
 ggplot(group_by(df, type), aes(type, y)) +
-  geom_pointrange(data = sampler(6, 3, replace = TRUE, seed = 559), stat = "summary") +
+  geom_pointrange(
+    data = sampler(6, 3, replace = TRUE, seed = 559),
+    stat = "summary"
+  ) +
   facet_wrap(~.draw)
 
 \dontrun{

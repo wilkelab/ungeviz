@@ -10,12 +10,12 @@
 sample_outcomes(model, newdata, times = 20, key = ".draw", ...)
 
 \method{sample_outcomes}{gam}(model, newdata, times = 20,
-  key = ".draw", unconditional = FALSE)
+  key = ".draw", unconditional = FALSE, ...)
 
 confidence_band(model, newdata, level = 0.95, ...)
 
 \method{confidence_band}{gam}(model, newdata, level = 0.95,
-  unconditional = FALSE)
+  unconditional = FALSE, ...)
 }
 \arguments{
 \item{model}{The fitted model to use for generating outcomes or calculating
@@ -29,6 +29,8 @@ which outcomes or confidence values should be calculated, as in
 
 \item{key}{Character vector holding the name of the column indicating
 separate outcome draws. Default is \code{.draw}.}
+
+\item{...}{Other arguments.}
 
 \item{unconditional}{Bool indicating whether the smoothing parameter uncertainty
 corrected covariance matrix is used (\code{TRUE}) or not (\code{FALSE}, the default), as in

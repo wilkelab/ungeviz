@@ -27,8 +27,8 @@ animations with gganimate.}
 running from 1 to n for each bootstrap, where n is the number
 of observations in each group.}
 
-\item{original_id}{Name (as character) of the column that indicate the
-original row that the bootstrapped row came from.}
+\item{original_id}{Name (as character) of the column that indicates the
+row from which the bootstrapped row originates.}
 
 \item{copies}{Name (as character) of the column that reports how often
 a specific original row has been oversampled.}
@@ -41,6 +41,7 @@ bs <- bootstrapper(3)
 bs(data.frame(letter = letters[1:4]))
 
 library(ggplot2)
+library(dplyr)
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
   geom_point() +
   geom_smooth(data = bootstrapper(5, Species), aes(group = .draw), se = FALSE) +
@@ -85,7 +86,10 @@ p <- ggplot(data, aes(x, y)) +
   geom_point(shape = 21, size = 6, fill = "white") +
   geom_text(label = "0", hjust = 0.5, vjust = 0.5, size = 10/.pt) +
   geom_point(data = bs, aes(group = .row), shape = 21, size = 6, fill = "blue") +
-  geom_text(data = bs, aes(label = .copies, group = .row), hjust = 0.5, vjust = 0.5, size = 10/.pt, color = "white") +
+  geom_text(
+    data = bs, aes(label = .copies, group = .row),
+    hjust = 0.5, vjust = 0.5, size = 10/.pt, color = "white"
+  ) +
   geom_smooth(data = bs, method = "lm", se = FALSE) +
   ggtitle("Bootstrap demonstration") +
   theme_bw()
