@@ -86,7 +86,7 @@
       <h1>Sampling and bootstrapping</h1>
                         <h4 class="author">Claus O. Wilke</h4>
             
-            <h4 class="date">2019-01-06</h4>
+            <h4 class="date">2019-01-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/wilkelab/ungeviz/blob/master/vignettes/sampling-bootstrapping.Rmd"><code>vignettes/sampling-bootstrapping.Rmd</code></a></small>
       <div class="hidden name"><code>sampling-bootstrapping.Rmd</code></div>
@@ -99,7 +99,7 @@
 <div id="sampling-from-data-frames" class="section level2">
 <h2 class="hasAnchor">
 <a href="#sampling-from-data-frames" class="anchor"></a>Sampling from data frames</h2>
-<p>Both <code><a href="../reference/sampler.html">sampler()</a></code> and <code><a href="../reference/bootstrapper.html">bootstrapper()</a></code> return functions that can be applied to data frames to carry out the sampling or bootstrapping. The benefit of using these generated functions is that we can reproducibly sample or bootstrap multiple times. As an exampe of this concept, assume we want to three times two rows each (without replacement) from a data frame that holds one row for each letter in the alphabet.</p>
+<p>Both <code><a href="../reference/sampler.html">sampler()</a></code> and <code><a href="../reference/bootstrapper.html">bootstrapper()</a></code> return functions that can be applied to data frames to carry out the sampling or bootstrapping. The benefit of using these generated functions is that we can reproducibly sample or bootstrap multiple times. As an exampe of this concept, assume we want to sample three times two rows each (without replacement) from a data frame that holds one row for each letter in the alphabet.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ungeviz)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co"># sampling object that samples 3 times a sample of size 2</span></a>

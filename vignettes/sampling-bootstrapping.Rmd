@@ -27,7 +27,7 @@ The functions `sampler()` and `bootstrapper()` generate sampling and bootstrappi
 
 ## Sampling from data frames
 
-Both `sampler()` and `bootstrapper()` return functions that can be applied to data frames to carry out the sampling or bootstrapping. The benefit of using these generated functions is that we can reproducibly sample or bootstrap multiple times. As an exampe of this concept, assume we want to three times two rows each (without replacement) from a data frame that holds one row for each letter in the alphabet.
+Both `sampler()` and `bootstrapper()` return functions that can be applied to data frames to carry out the sampling or bootstrapping. The benefit of using these generated functions is that we can reproducibly sample or bootstrap multiple times. As an exampe of this concept, assume we want to sample three times two rows each (without replacement) from a data frame that holds one row for each letter in the alphabet.
 ```{r}
 library(ungeviz)
 
