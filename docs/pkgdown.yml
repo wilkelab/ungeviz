@@ -2,7 +2,7 @@ pandoc: 2.1.3
 pkgdown: 1.3.0
 pkgdown_sha: ~
 articles:
+  misc-geoms-stats: misc-geoms-stats.html
   posterior-draws: posterior-draws.html
   sampling-bootstrapping: sampling-bootstrapping.html
-  supporting-geoms-stats: supporting-geoms-stats.html
 

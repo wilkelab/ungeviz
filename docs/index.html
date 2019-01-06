@@ -54,13 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/misc-geoms-stats.html">Miscellaneous geoms and stats</a>
+    </li>
+    <li>
       <a href="articles/posterior-draws.html">Posterior draws from a fitted model</a>
     </li>
     <li>
       <a href="articles/sampling-bootstrapping.html">Sampling and bootstrapping</a>
-    </li>
-    <li>
-      <a href="articles/supporting-geoms-stats.html">Supporting geoms and stats</a>
     </li>
   </ul>
 </li>
@@ -109,7 +109,7 @@
 <a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ungeviz)</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gganimate)</a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">cacao <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(location <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Canada"</span>, <span class="st">"U.S.A."</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">cacao <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(location <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Canada"</span>, <span class="st">"U.S.A."</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(rating, location)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb2-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(</a>
 <a class="sourceLine" id="cb2-10" data-line-number="10">    <span class="dt">position =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span>(<span class="dt">height =</span> <span class="fl">0.3</span>, <span class="dt">width =</span> <span class="fl">0.05</span>), </a>
@@ -160,14 +160,14 @@
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(emmeans)</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">cacao_lumped &lt;-<span class="st"> </span>cacao <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">    <span class="dt">location =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/forcats/topics/fct_lump">fct_lump</a></span>(location, <span class="dt">n =</span> <span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">    <span class="dt">location =</span> <span class="kw"><a href="https://forcats.tidyverse.org/reference/fct_lump.html">fct_lump</a></span>(location, <span class="dt">n =</span> <span class="dv">20</span>)</a>
 <a class="sourceLine" id="cb5-7" data-line-number="7">  )</a>
 <a class="sourceLine" id="cb5-8" data-line-number="8">  </a>
 <a class="sourceLine" id="cb5-9" data-line-number="9">cacao_means &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/lm">lm</a></span>(rating <span class="op">~</span><span class="st"> </span>location, <span class="dt">data =</span> cacao_lumped) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/emmeans/topics/emmeans">emmeans</a></span>(<span class="st">"location"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-11" data-line-number="11"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/broom/topics/reexports">tidy</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/forcats/topics/fct_reorder">fct_reorder</a></span>(location, estimate))</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="kw"><a href="https://forcats.tidyverse.org/reference/fct_reorder.html">fct_reorder</a></span>(location, estimate))</a>
 <a class="sourceLine" id="cb5-13" data-line-number="13"></a>
 <a class="sourceLine" id="cb5-14" data-line-number="14"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(cacao_means, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> estimate, <span class="dt">moe =</span> std.error, <span class="dt">y =</span> location)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb5-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="reference/stat_confidence_density.html">stat_confidence_density</a></span>(<span class="dt">fill =</span> <span class="st">"lightblue"</span>, <span class="dt">height =</span> <span class="fl">0.8</span>, <span class="dt">confidence =</span> <span class="fl">0.68</span>) <span class="op">+</span></a>

@@ -53,13 +53,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/misc-geoms-stats.html">Miscellaneous geoms and stats</a>
+    </li>
+    <li>
       <a href="../articles/posterior-draws.html">Posterior draws from a fitted model</a>
     </li>
     <li>
       <a href="../articles/sampling-bootstrapping.html">Sampling and bootstrapping</a>
-    </li>
-    <li>
-      <a href="../articles/supporting-geoms-stats.html">Supporting geoms and stats</a>
     </li>
   </ul>
 </li>
@@ -86,7 +86,7 @@
       <h1>Sampling and bootstrapping</h1>
                         <h4 class="author">Claus O. Wilke</h4>
             
-            <h4 class="date">2019-01-05</h4>
+            <h4 class="date">2019-01-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/wilkelab/ungeviz/blob/master/vignettes/sampling-bootstrapping.Rmd"><code>vignettes/sampling-bootstrapping.Rmd</code></a></small>
       <div class="hidden name"><code>sampling-bootstrapping.Rmd</code></div>
@@ -215,7 +215,7 @@
 <a class="sourceLine" id="cb3-46" data-line-number="46"><span class="co">#&gt; 12     2     2          111 C     -0.196  C              12</span></a>
 <a class="sourceLine" id="cb3-47" data-line-number="47"></a>
 <a class="sourceLine" id="cb3-48" data-line-number="48"><span class="co"># sample within groups defined by `type` column</span></a>
-<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(df, type) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/sampler.html">sampler</a></span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">seed =</span> <span class="dv">123</span>)()</a>
+<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(df, type) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/sampler.html">sampler</a></span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">seed =</span> <span class="dv">123</span>)()</a>
 <a class="sourceLine" id="cb3-50" data-line-number="50"><span class="co">#&gt; # A tibble: 12 x 6</span></a>
 <a class="sourceLine" id="cb3-51" data-line-number="51"><span class="co">#&gt; # Groups:   type, .draw [6]</span></a>
 <a class="sourceLine" id="cb3-52" data-line-number="52"><span class="co">#&gt;    .draw   .id .original_id type        y  .row</span></a>
@@ -236,7 +236,7 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gganimate)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">cacao <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(location <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Canada"</span>, <span class="st">"U.S.A."</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">cacao <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(location <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Canada"</span>, <span class="st">"U.S.A."</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(rating, location)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(</a>
 <a class="sourceLine" id="cb4-7" data-line-number="7">    <span class="dt">position =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span>(<span class="dt">height =</span> <span class="fl">0.3</span>, <span class="dt">width =</span> <span class="fl">0.05</span>), </a>
@@ -247,7 +247,7 @@
 <a class="sourceLine" id="cb4-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gganimate/topics/transition_states">transition_states</a></span>(.draw, <span class="dv">1</span>, <span class="dv">3</span>)</a></code></pre></div>
 <p><img src="sampling-bootstrapping_files/figure-html/cacao-ratings-1.gif"><!-- --></p>
 <p>By default, gganimate shows the vertical bars sliding from one position to another. If instead we want the bars to disappear and reappear, we need to tell gganimate that it should consider them to be different. We do this by setting the group aesthetic of the vpline layer to <code>.row</code>. Since <code>.row</code> simply counts all rows in the sampled data frame, this group setting guarantees that gganimate thinks of all vertical bars as independent objects.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">cacao <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(location <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Canada"</span>, <span class="st">"U.S.A."</span>)) <span class="op">%&gt;%</span></a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">cacao <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(location <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Canada"</span>, <span class="st">"U.S.A."</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(rating, location)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">    <span class="dt">position =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span>(<span class="dt">height =</span> <span class="fl">0.3</span>, <span class="dt">width =</span> <span class="fl">0.05</span>), </a>
