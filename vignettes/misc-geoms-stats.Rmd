@@ -1,5 +1,5 @@
 ---
-title: "Supporting geoms and stats"
+title: "Miscellaneous geoms and stats"
 author: "Claus O. Wilke"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The package provides a few supporting geoms and stats that can be generally helpful when generating uncertainty visualizations.
+The package provides a few miscellaneous geoms and stats that can be generally helpful when generating uncertainty visualizations.
 
 ## Horizontal and vertical plines
 
