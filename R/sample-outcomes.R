@@ -113,6 +113,10 @@ sample_outcomes.default <- function(model, ...) {
 sample_outcomes.gam <- function(model, newdata, times = 20, key = ".draw", unconditional = FALSE, ...) {
   # based on original code concept by Noam Ross
   # https://gist.github.com/noamross/8bf1fc5b2f629b3a7e1eb6b4572e8388
+
+  # look into gratia package () as a potential alternative way of doing this
+  # https://github.com/gavinsimpson/gratia/issues
+
   response <- rlang::expr_name(attr(model$terms, "variables")[[2]])
   key <- enquo(key)
 

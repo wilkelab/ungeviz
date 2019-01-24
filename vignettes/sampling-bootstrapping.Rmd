@@ -116,7 +116,7 @@ cacao %>% filter(location %in% c("Canada", "U.S.A.")) %>%
   ) +
   theme_bw() + 
   transition_states(.draw, 1, 3) +
-  enter_fade() + exit_fade() # smoth enter and exit
+  enter_fade() + exit_fade() # smooth enter and exit
 ```
 
 ## Bootstrapping data frames
