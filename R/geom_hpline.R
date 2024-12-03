@@ -30,8 +30,7 @@ geom_hpline <- function(mapping = NULL, data = NULL,
                         na.rm = FALSE,
                         show.legend = NA,
                         inherit.aes = TRUE) {
-  layer(
-    data = data,
+  layer(data = data,
     mapping = mapping,
     stat = stat,
     geom = GeomHpline,
@@ -51,9 +50,9 @@ geom_hpline <- function(mapping = NULL, data = NULL,
 #' @export
 GeomHpline <- ggproto("GeomHpline", GeomSegment,
   required_aes = c("x", "y"),
-  non_missing_aes = c("size", "colour", "linetype", "width"),
+  non_missing_aes = c("linewidth", "colour", "linetype", "width"),
   default_aes = aes(
-    width = 0.5, colour = "black", size = 2, linetype = 1,
+    width = 0.5, colour = "black", linewidth = 2, linetype = 1,
     alpha = NA
   ),
 
